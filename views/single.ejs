@@ -1,0 +1,39 @@
+<% include partials/header %>
+
+
+
+    <div class="text-center container jumbotron">
+      <h2><%= entry[0].subject %> found</h2>
+    </div>
+    <a href="/home">Back Home</a><br><br>
+
+    <div class="text-center container lead">
+
+        <div style=""class="box text-center" id="">
+
+          <div class="" id="docDisplay">
+          <% if(entry.length > 0){ %>
+
+            <% entry.forEach(function(doc){ %>
+              <div class="" >
+                <h2><a href="/entry/<%= doc.id %>" ><%= doc.subject %></a></h2>
+                  <p><%= doc.body %></p>
+                  <p style="font-size: 18px;">Published: <%= doc.date %></p>
+                  <p><%= doc.id %></p>
+                  <form class="ctrl" action="/entry/delete/<%= doc.id %>" method="post">
+                    <button class="btn"type="submit" data-toggle="tooltip" title="Are you sure ? This is permanent!">delete</button>
+                  </form>
+                  <form class="ctrl" action="/entry/update/<%= doc.id %>" method="post">
+                    <button class="btn"type="submit">update</button>
+                  </form>
+              </div>
+            <% }); %>
+
+          <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<% include partials/footer %>

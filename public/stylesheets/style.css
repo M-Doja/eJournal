@@ -1,0 +1,45 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 10px;
+  background-color: #fff;
+  color: #444;
+}
+
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 110%;
+  border:3px solid #000;
+}
+button{
+  color: #000;
+  font-weight: bold;
+}
+
+form.ctrl {
+  display: inline-block;
+  margin: 15px 20px;
+}
+.cancelEditBtn {
+  margin: auto 20px;
+}
+
+#docDisplay {
+  overflow-y: scroll;
+  height: 300px;
+}
+.doc {
+  border-top: 2px solid #fff;
+}
