@@ -2,9 +2,20 @@ const express = require('express');
 const router = express.Router();
 const Entry = require('../models/entry');
 const User = require('../models/user');
+const os = require('os');
+const fs = require('fs');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
+const destination = os.homedir()+'/Documents/TrifectaExport';
+const profileLoc = destination+'/profile-json';
+const dataLoc = destination+'/trifecta.db';
+const fsm = require('./fsMethods');
+
 
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
+  fsm.directoryCheck();
+
   var entry = new Entry({
     subject: req.body.subject,
     body: req.body.body,
@@ -12,6 +23,11 @@ router.post('/new', isLoggedIn, function(req, res, next){
     time: new Date().toLocaleTimeString(),
     authorId: req.user.id
   });
+
+  var dataArr = fsm.fetchData(dataLoc);
+  dataArr.push(entry);
+  fsm.saveData(dataArr);
+console.log(dataArr);
   User.findById({'_id': req.user.id}, function(err, user){
     if (err) {
       return res.send(err);
