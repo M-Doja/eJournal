@@ -9,6 +9,7 @@
   <div class="text-center container lead">
     <h1 class=""><%= title %></h1>
     <p>Welcome to <%= title %> <%= profile.userName %></p>
+    <!-- <p> <%= docs %> </p> -->
 
 
   </div>
@@ -16,7 +17,7 @@
   <div class="container jumbotron">
 
     <div class="wrapper">
-      
+
       <form class="box text-center" action="/entry/new" method="post">
         <h2>Journal Entry Form</h2>
 
@@ -27,7 +28,7 @@
 
         <div class="">
           <label for="body">Body</label>
-          <textarea class="form-control" name="body"id="body" rows="8" cols="60"></textarea>
+          <textarea required class="form-control" name="body"id="body" rows="8" cols="60"></textarea>
         </div><br>
         <div class="">
           <button type="submit" class="btn " name="button">Add New Data</button>

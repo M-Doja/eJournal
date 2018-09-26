@@ -3,43 +3,37 @@ const router = express.Router();
 const passport = require('passport');
 const Entry = require('../models/entry');
 const User = require('../models/user');
-var fsm = require('./fsMethods');
-var os = require('os');
-var destination = os.homedir()+'/Documents/eJouranl';
-var profileLoc = destination+'/profile-json';
-var dataLoc = destination+'/eJournal.db';
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 
 
-
-// GET Home Page
+/* Render Home Page */
 router.get('/', (req, res) => {
   res.render('index', {text: "Yo yo peeps!", title:""});
 });
 
+/* GET Home Page */
 router.get('/home', isLoggedIn, (req, res) => {
-  // var userDATA = fsm.directoryCheck();
   User.findById({'_id': req.user.id}, function(err, user){
     Entry.find({'authorId': user.id}, function(err, entries){
       if (err) {
         res.send(err);
       }
-      console.log(fsm.fetchData(dataLoc));
-      res.render('home', {entry: entries, text: "Yo yo peeps!",title: 'Trifecta eJournal', docs: fsm.fetchData(dataLoc), profile: fsm.fetchData(profileLoc)});
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].subject = cryptr.decrypt(entries[i].subject);
+        entries[i].body = cryptr.decrypt(entries[i].body)
+      }
+      res.render('home', {entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
     })
   });
 });
 
-router.get('/single', isLoggedIn, (req, res) => {
-  res.render('single', {title: 'Trifecta eJournal', text: '', documents: {}, profile: {}});
-});
-
-
-// GET REGISTER FORM
+/* Render Register Form */
 router.get('/register', (req, res) => {
   res.render('register');
 });
 
-// SIGN UP
+/* POST Rregister New User */
 router.post('/register', (req, res) => {
   User.register(new User({
     username: req.body.username,
@@ -55,12 +49,12 @@ router.post('/register', (req, res) => {
   });
 });
 
-
+/* Render Login Page */
 router.get('/login', (req, res) => {
   res.render('login');
 });
 
-// SIGN UP
+/* POST Sign In */
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/home',
   failureRedirect: '/login'
@@ -68,9 +62,14 @@ router.post('/login', passport.authenticate('local', {
 
 });
 
+/* GET Log Out Page*/
 router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
+});
+
+router.get('/no_credit', (req, res, next) => {
+  res.render('nocredit', {title: ''})
 });
 
 function isLoggedIn(req, res, next){

@@ -2,7 +2,7 @@ var fs = require('fs');
 var os = require('os');
 var Cryptr = require('cryptr');
 var cryptr = new Cryptr('ZQ7d6F3Edb2eg');
-var destination = os.homedir()+'/Documents/eJouranl';
+var destination = os.homedir()+'/Documents/eJournal';
 var profileLoc = destination+'/profile-json';
 var dataLoc = destination+'/eJournal.db';
 const fetchData = function(fileLocation){
@@ -21,7 +21,7 @@ const fetchData = function(fileLocation){
 const saveData = function(entry) {
   // SAVE DATA
   var x = cryptr.encrypt(JSON.stringify(entry));
-  fs.writeFile(dataLoc, x, (err) => {
+  fs.writeFile(dataLoc, entry, (err) => {
     if (err) {
       return console.log(err);
     }
@@ -42,7 +42,6 @@ module.exports = {
 
         var userData = {
           userName: os.userInfo().username,
-          address: os.networkInterfaces()["Wi-Fi"][3].address,
           host: os.hostname(),
           timeStamp: new Date().getTime()
         }
