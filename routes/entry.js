@@ -4,7 +4,41 @@ const Entry = require('../models/entry');
 const User = require('../models/user');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
+const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
+const shareCredit = 60;  /* Shared this and new user joined */
 
+
+/*
+  You purchase the eJournal app and recieve 30 posts or 30 days free
+  noPost deductions will not be active during intial 30 day period
+  number of posts will deduct upon use during period
+  all posts made will earn post credits
+  if all 30 consectutively used All-Star credit given
+  Need 18 posts per month min to start earning post credit
+
+  App cost - $2.99
+
+  re-up post balance
+  $3.99 - 30 posts / 1 month
+  $9.99 - posts / 3 months
+  $14.99 posts / 6 months
+  $19.99 - 365 posts / 1 year
+*/
+
+function creditEarned(numOfDaysPosted){
+  var deduct = 30 - numOfDaysPosted;
+  /*
+    minimum 18 posts/day gives 7.5 'post credit'
+    maximum 30 posts/day gives 22.5 days of 'post credit'
+   */
+  var earned = numOfDaysPosted * .75;
+  /*
+    every day with no post made deducts 1/2 days of 'post credit'
+  */
+  var lost = deduct * .5;
+  return earned - lost;
+}
+console.log(creditEarned(12));
 
 
 // POST NEW ENTRY
