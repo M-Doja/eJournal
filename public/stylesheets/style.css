@@ -43,3 +43,11 @@ form.ctrl {
 .doc {
   border-top: 2px solid #fff;
 }
+#logoutBtn button,
+#logoutBtn button:focus {
+  text-decoration:none;
+  outline:none;
+  height: 35px;
+  width: 75px;
+  border-radius: 6px;
+}
