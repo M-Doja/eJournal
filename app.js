@@ -2,11 +2,13 @@ var express = require('express');
 var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var bodyParser            = require('body-parser');
-var LocalStrategy         = require('passport-local');
+var bodyParser = require('body-parser');
+var LocalStrategy = require('passport-local');
 var passportLocalMongoose = require('passport-local-mongoose');
 var User = require('./models/user');
 var app = express();
+
+
 
 mongoose.connect('mongodb://localhost:27017/Auth-Demo',(err, db) => {
 // mongoose.connect(dbURI, {
@@ -40,6 +42,7 @@ passport.deserializeUser(User.deserializeUser());
 // ============================
 var mainRoutes = require('./routes/index');
 var entryRoutes = require('./routes/entry');
+
 app.use('/', mainRoutes);
 app.use('/entry', entryRoutes);
 

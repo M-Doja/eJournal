@@ -6,6 +6,34 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
 const shareCredit = 60;  /* Shared this and new user joined */
+// const charge = require('../charge');
+// const keyPublish = 'pk_test_mqsHIcQhk7MQsVdWM21RbvOp';
+// const keySecret = 'sk_test_MH29dqvmnJeafJIZPiJ1SmCt';
+// const stripe = require('stripe')(keySecret);
+
+// router.post('/charge', (req, res) => {
+// let amount;
+//   stripe.customers.create({
+//     email: req.body.email,
+//     card: req.body.id
+//   })
+//   .then(customer =>
+//     stripe.charges.create({
+//       amount:10000,
+//       description: "Sample Charge",
+//       currency: "usd",
+//       customer: customer.id
+//     }))
+//     .then(charge => {
+//       console.log("Purchase succeeded:", charge);
+//       res.send(charge);
+//     })
+//     .catch(err => {
+//       console.log('Error: ', err);
+//       res.status(500).send({error: 'Purchase Failed'});
+//     });
+// });
+
 
 
 /*
@@ -134,6 +162,7 @@ router.post('/delete/:id', function(req, res, next){
       res.redirect('/home')
     });
 });
+
 
 
 function isLoggedIn(req, res, next){

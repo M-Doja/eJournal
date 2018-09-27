@@ -5,6 +5,34 @@ const Entry = require('../models/entry');
 const User = require('../models/user');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
+const charge = require('../charge');
+const keyPublish = 'pk_test_mqsHIcQhk7MQsVdWM21RbvOp';
+const keySecret = 'sk_test_MH29dqvmnJeafJIZPiJ1SmCt';
+const stripe = require('stripe')(keySecret);
+
+// router.post('/charge', (req, res) => {
+// let amount;
+//   stripe.customers.create({
+//     email: req.body.email,
+//     card: req.body.id
+//   })
+//   .then(customer =>
+//     stripe.charges.create({
+//       amount:10000,
+//       description: "Sample Charge",
+//       currency: "usd",
+//       customer: customer.id,
+//       source: req.body.stripeToken
+//     }))
+//     .then(charge => {
+//       console.log("Purchase succeeded:", charge);
+//       res.send(charge);
+//     })
+//     .catch(err => {
+//       console.log('Error: ', err);
+//       res.status(500).send({error: 'Purchase Failed'});
+//     });
+// });
 
 
 /* Render Home Page */
@@ -71,6 +99,8 @@ router.get('/logout', (req, res) => {
 router.get('/no_credit', (req, res, next) => {
   res.render('nocredit', {title: ''})
 });
+
+
 
 function isLoggedIn(req, res, next){
   if (req.isAuthenticated()) {

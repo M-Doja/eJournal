@@ -1,20 +1,30 @@
 <% include partials/header %>
 
+
+
+    <div class="text-center container jumbotron">
+      <h2>Sorry You don't have enough credit to post</h2>
+    </div>
+    <a href="/home">Back Home</a><br><br>
+
     <div class="text-center container lead">
-      <h1 class=""><%= title %></h1>
-      <p>Welcome to <%= title %>Update Page </p>
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="46K3KVAG3FN6Q">
+        <table>
+        <tr><td><input type="hidden" name="on0" value="Purchase Additional Posts">Purchase Additional Posts</td></tr><tr><td><select name="os0">
+        	<option value="1 Month (30 Posts)">1 Month (30 Posts) $3.99 USD</option>
+        	<option value="3 Months (90 Posts)">3 Months (90 Posts) $9.99 USD</option>
+        	<option value="6 Months (180 Posts)">6 Months (180 Posts) $14.99 USD</option>
+        	<option value="1 yr (365 Posts)">1 yr (365 Posts) $19.99 USD</option>
+        </select> </td></tr>
+        </table>
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+      </form>
 
     </div>
 
-    <div class="container jumbotron">
-
-      <div class=" text-center">
-          <h1>Sorry but you don't have enough credit for that.</h1>
-          
-
-
-
-      </div>
-    </div>
 
 <% include partials/footer %>
