@@ -9,6 +9,15 @@ const shareCredit = 60;  /* Shared this and new user joined */
 
 
 /*
+  THE IDEA: This serves as a personal eJournal where a user's data/posts
+  are encrypted and stored securely on a database. As such this is based on
+  the idea that a user is making one post per day and using this application
+  as a daily journal.
+  Below is a description of the initial package setup and purchase options.
+
+  App cost - $2.99
+
+  Initial Package:
   You purchase the eJournal app and recieve 30 posts or 30 days free
   noPost deductions will not be active during intial 30 day period
   number of posts will deduct upon use during period
@@ -16,12 +25,10 @@ const shareCredit = 60;  /* Shared this and new user joined */
   if all 30 consectutively used All-Star credit given
   Need 18 posts per month min to start earning post credit
 
-  App cost - $2.99
-
-  re-up post balance
+  Purchase additional posts
   $3.99 - 30 posts / 1 month
-  $9.99 - posts / 3 months
-  $14.99 posts / 6 months
+  $9.99 - 90 posts / 3 months
+  $14.99 - 180 posts / 6 months
   $19.99 - 365 posts / 1 year
 */
 
@@ -30,6 +37,8 @@ function creditEarned(numOfDaysPosted){
   /*
     minimum 18 posts/day gives 7.5 'post credit'
     maximum 30 posts/day gives 22.5 days of 'post credit'
+    12 posts leaves a zero balance
+    20 posts leaves a 30 balance
    */
   var earned = numOfDaysPosted * .75;
   /*
@@ -40,6 +49,18 @@ function creditEarned(numOfDaysPosted){
 }
 console.log(creditEarned(12));
 
+function  daysChecker(oldDate, newDate){
+  let oDArray = oldDate.split('/');
+  let nDArray = newDate.split('/');
+  let diff = nDArray[1] - oDArray[1];
+  if ( diff === 1) {
+    console.log('Next Day');
+  }else {
+    console.log(diff + " days passed");
+  }
+}
+
+daysChecker('9/27/2018', '9/28/2018');
 
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
