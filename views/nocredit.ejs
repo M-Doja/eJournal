@@ -7,24 +7,62 @@
     </div>
     <a href="/home">Back Home</a><br><br>
 
-    <div class="text-center container lead">
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-        <input type="hidden" name="cmd" value="_s-xclick">
-        <input type="hidden" name="hosted_button_id" value="46K3KVAG3FN6Q">
-        <table>
-        <tr><td><input type="hidden" name="on0" value="Purchase Additional Posts">Purchase Additional Posts</td></tr><tr><td><select name="os0">
-        	<option value="1 Month (30 Posts)">1 Month (30 Posts) $3.99 USD</option>
-        	<option value="3 Months (90 Posts)">3 Months (90 Posts) $9.99 USD</option>
-        	<option value="6 Months (180 Posts)">6 Months (180 Posts) $14.99 USD</option>
-        	<option value="1 yr (365 Posts)">1 yr (365 Posts) $19.99 USD</option>
-        </select> </td></tr>
-        </table>
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-      </form>
+
+    <div id="accordion" class="text-center"role="tablist">
+        <div class="card">
+            <div class="card-header" role="tab" id="heading1">
+              <h2>Buy Now</h2>
+            </div>
+            <div>
+                <div class="card-body">
+                    <form action="/stripe/charge/thirty" method="POST">
+                        <script class="stripe-button"
+                        src="https://checkout.stripe.com/checkout.js"
+                        data-email="trifectaejournal@gmail.com"
+                        data-key="pk_test_mqsHIcQhk7MQsVdWM21RbvOp"
+                        data-amount="399"
+                        data-name="Trifecta eJournal"
+                        data-description="Post Purchase"
+                        data-label="Purchase 1 month (30 Posts)"
+                        data-locale="en-US"></script>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" role="tab" id="heading1">
+              <h2>Buy Now</h2>
+            </div>
+            <div>
+                <div class="card-body">
+                    <form action="/stripe/charge/ninety" method="POST">
+                        <script class="stripe-button"
+                        src="https://checkout.stripe.com/checkout.js"
+                        data-email="trifectaejournal@gmail.com"
+                        data-key="pk_test_mqsHIcQhk7MQsVdWM21RbvOp"
+                        data-amount="999"
+                        data-name="Trifecta eJournal"
+                        data-description="Post Purchase"
+                        data-label="Purchase 3 month (90 Posts)"
+                        data-locale="en-US"></script>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     </div>
+    <script>
+        // Configure Checkout
+        var checkout = StripeCheckout.configure({
+            key: 'pk_test_mqsHIcQhk7MQsVdWM21RbvOp',
+            token: function(token) {
+                window.location.replace('/stripe/charge/' + token.id)
+            },
+            locale: 'en-US'
+        });
+    </script>
+    <script src="https://js.stripe.com/v3/"></script>
 
 
 <% include partials/footer %>

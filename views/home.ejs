@@ -1,25 +1,19 @@
 <% include partials/header %>
 
   <div class="container">
-    <!-- <h1><%= text %></h1> -->
-
     <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
   </div>
+
   <div class="text-center container lead">
     <h1 class=""><%= title %></h1>
-    <p>Welcome to <%= title %> <%= profile.userName %></p>
-    <!-- <p> <%= docs %> </p> -->
-
-
+    <p>Welcome to <%= title %> </p>
   </div>
 
   <div class="container jumbotron">
-
     <div class="wrapper">
 
       <form class="box text-center" action="/entry/new" method="post">
         <h2>Journal Entry Form</h2>
-
         <div class="">
           <label for="subject">Subject</label>
           <input class="form-control"type="text" name="subject" id="subject" value="">
@@ -29,10 +23,12 @@
           <label for="body">Body</label>
           <textarea required class="form-control" name="body"id="body" rows="8" cols="60"></textarea>
         </div><br>
+
         <div class="">
           <button type="submit" class="btn " name="button">Add New Data</button>
         </div>
       </form>
+
       <div style=""class="box text-center" id="formDisplay">
         <% if(entry.length === 1) { %>
           <p> You have <%= entry.length %> document available.</p>
@@ -47,7 +43,6 @@
               <h2><a href="/entry/<%= doc.id %>" ><%= doc.subject %></a></h2>
 
                 <p style="font-size: 18px;">Published: <%= doc.date %></p>
-                <!-- <p><%= doc.id %></p> -->
             </div>
           <% }); %>
 
