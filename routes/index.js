@@ -26,7 +26,9 @@ router.get('/home', isLoggedIn, (req, res) => {
         entries[i].subject = cryptr.decrypt(entries[i].subject);
         entries[i].body = cryptr.decrypt(entries[i].body);
       }
-
+      // var days = (1538263852558 / 86400000) * 365;
+      console.log("hello world");
+console.log(days);
       res.render('home', {entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
     })
   });
