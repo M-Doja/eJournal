@@ -47,23 +47,39 @@ function creditEarned(numOfDaysPosted){
   var lost = deduct * .5;
   return earned - lost;
 }
-console.log(creditEarned(12));
-
+// console.log(creditEarned(12));
 function  daysChecker(oldDate, newDate){
-  let oDArray = oldDate.split('/');
-  let nDArray = newDate.split('/');
-  let diff = nDArray[1] - oDArray[1];
-  if ( diff === 1) {
-    console.log('Next Day');
-  }else {
-    console.log(diff + " days passed");
+  let diff = newDate - oldDate;
+  return diff;
+  // if ( diff === 1) {
+  //   console.log('Next Day');
+  // }else {
+  //   console.log(diff + " days passed");
+  // }
+}
+
+var balanceHolder = [];
+var days = [];
+var ent = [];
+var daysBetweenPost;
+
+function showBal(obj1, obj2){
+  var bal = obj1.balance - daysChecker(obj2.date.getDate(), new Date().getDate()) * .5;
+  return bal;
+}
+
+function getUserDeducAmt(entArr, newEntry){
+  for (var i = 0; i < entArr.length; i++) {
+    var daysDiff = parseFloat(entArr[i].date) - parseFloat(newEntry.date.getDate());
+    var deduc  = daysDiff *.5
+    console.log(deduc);
+    return deduc;
   }
 }
 
-daysChecker('9/27/2018', '9/28/2018');
-
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
+  // Creat new encrypted entry
   var eSub = cryptr.encrypt(req.body.subject);
   var eBod = cryptr.encrypt(req.body.body);
   var entry = new Entry({
@@ -73,16 +89,28 @@ router.post('/new', isLoggedIn, function(req, res, next){
     time: new Date().toLocaleTimeString(),
     authorId: req.user.id
   });
+  // find current User
   User.findById({'_id': req.user.id}, function(err, user){
     if (err) {
       return res.send(err);
     }
-    if (user.entries.length < 2) {
+    var x = getUserDeducAmt(user.entries,entry)
+    console.log('Deduct this : ', x);
+    if (user.entries.length < 10) {
+
+      // Save entry
       entry.save(function(err, entry){
         if (err) {
           return res.send(err);
         }
-        user.entries.push(entry.id);
+
+        user.balance += .75;
+        user.entries.push({
+          entryId: entry.id,
+          entryDate: entry.date.getDate()
+        });
+
+
         user.save(function(err){
           if (err) {
             return console.log(err);
