@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 const Entry = require('../models/entry');
 const User = require('../models/user');
 const Cryptr = require('cryptr');
@@ -7,7 +8,8 @@ const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
 const shareCredit = 60;  /* Shared this and new user joined */
 
-
+var now = moment().startOf('month').fromNow();
+console.log("Entry right now: ", now);
 /*
   THE IDEA: This serves as a personal eJournal where a user's data/posts
   are encrypted and stored securely on a database. As such this is based on
@@ -48,54 +50,14 @@ function creditEarned(numOfDaysPosted){
   return earned - lost;
 }
 // console.log(creditEarned(12));
-function  daysChecker(oldDate, newDate){
-  let diff = newDate - oldDate;
-  return diff;
-  // if ( diff === 1) {
-  //   console.log('Next Day');
-  // }else {
-  //   console.log(diff + " days passed");
-  // }
-}
 
-var balanceHolder = [];
-var days = [];
-var ent = [];
-var daysBetweenPost;
 
 function showBal(obj1, obj2){
   var bal = obj1.balance - daysChecker(obj2.date.getDate(), new Date().getDate()) * .5;
   return bal;
 }
 
-function getUserDeducAmt(entArr, newEntry){
-  for (var i = 0; i < entArr.length; i++) {
-    var daysDiff = parseFloat(entArr[i].date) - parseFloat(newEntry.date.getDate());
-    var deduc  = daysDiff *.5
-    console.log(deduc);
-    return deduc;
-  }
-}
 
-function daysBetween( date1, date2 ) {
-  //Get 1 day in milliseconds
-  var one_day=1000*60*60*24;
-
-  // Convert both dates to milliseconds
-  /*
-   NOTE:  Already have Time Saved on Obj
-   so use entry.time to subctract.
-  */
-
-  // var date1_ms = date1.getTime();
-  // var date2_ms = date2.getTime();
-
-  // Calculate the difference in milliseconds
-  var difference_ms = date2_ms - date1_ms;
-
-  // Convert back to days and return
-  return Math.round(difference_ms/one_day);
-}
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
   // Creat new encrypted entry
@@ -113,8 +75,6 @@ router.post('/new', isLoggedIn, function(req, res, next){
     if (err) {
       return res.send(err);
     }
-    var x = getUserDeducAmt(user.entries,entry)
-    console.log('Deduct this : ', x);
     if (user.entries.length < 10) {
 
       // Save entry
@@ -122,21 +82,50 @@ router.post('/new', isLoggedIn, function(req, res, next){
         if (err) {
           return res.send(err);
         }
+        Entry.find({'authorId': user.id}, function(err, allEntry) {
+          var dayArray = [];
 
-        user.balance += .75;
-        user.entries.push({
-          entryId: entry.id,
-          entryDate: entry.date.getDate()
-        });
-
-
-        user.save(function(err){
           if (err) {
-            return console.log(err);
+            console.log(err);
           }
-        });
-        res.redirect('/home');
-      });
+          for (var i = 1; i < allEntry.length; i++) {
+            // console.log(allEntry[i].time);
+            // console.log(allEntry[i].time-allEntry[i-1].time);
+
+            dayArray.push(allEntry[i].time-allEntry[i-1].time);
+            console.log("DayArray: ", dayArray);
+            return dayArray;
+          } // End for loop
+
+          console.log("dayArray: ", dayArray);
+
+          user.balance += .75;
+          user.entries.push({
+            entryId: entry.id,
+            entryDate: entry.date.getDate()
+          });
+          user.save(function(err){
+            if (err) {
+              return console.log(err);
+            }
+          });
+          res.redirect('/home');
+        })
+
+
+        // user.balance += .75;
+        // user.entries.push({
+        //   entryId: entry.id,
+        //   entryDate: entry.date.getDate()
+        // });
+        // user.save(function(err){
+        //   if (err) {
+        //     return console.log(err);
+        //   }
+        // });
+        // res.redirect('/home');
+
+      }); // End of Entry Save fn
     }else {
       res.redirect('/no_credit');
     }

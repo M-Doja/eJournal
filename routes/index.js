@@ -6,12 +6,16 @@ const User = require('../models/user');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const dates = [];
+const moment = require('moment');
 
 
 /* Render Home Page */
 router.get('/', (req, res) => {
   res.render('index', {text: "Yo yo peeps!", title:""});
 });
+
+var now = moment.now('HH:mm:ss');
+console.log("Index right now: ", now);
 
 
 /* GET Home Page */
@@ -28,7 +32,7 @@ router.get('/home', isLoggedIn, (req, res) => {
       }
       // var days = (1538263852558 / 86400000) * 365;
       console.log("hello world");
-console.log(days);
+console.log();
       res.render('home', {entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
     })
   });
