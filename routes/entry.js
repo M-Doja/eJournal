@@ -9,7 +9,10 @@ const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
 const shareCredit = 60;  /* Shared this and new user joined */
 
 var now = moment().startOf('month').fromNow();
-console.log("Entry right now: ", now);
+if (now == 1) {
+
+  console.log("Entry right now: ", now);
+}
 /*
   THE IDEA: This serves as a personal eJournal where a user's data/posts
   are encrypted and stored securely on a database. As such this is based on
@@ -188,7 +191,7 @@ router.post('/delete/:id', function(req, res, next){
         }
       }
     });
-    Entry.findByIdAndRemove(req.params.id,  function(err, doc) {
+    Entry.findOneAndDelete({'_id': req.params.id},  function(err, doc) {
       if (err) {
         res.send(err)
       }

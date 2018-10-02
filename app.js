@@ -17,6 +17,7 @@ var app = express();
 mongoose.connect('mongodb://localhost:27017/Auth-Demo',(err, db) => {
 // mongoose.connect(dbURI, {
   useMongoClient: true
+  useNewUrlParser: true
 }, (err, db) => {
   if (err) {
     console.log(err);
