@@ -8,11 +8,7 @@ const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
 const shareCredit = 60;  /* Shared this and new user joined */
 
-var now = moment().startOf('month').fromNow();
-if (now == 1) {
 
-  console.log("Entry right now: ", now);
-}
 /*
   THE IDEA: This serves as a personal eJournal where a user's data/posts
   are encrypted and stored securely on a database. As such this is based on
@@ -37,30 +33,9 @@ if (now == 1) {
   $19.99 - 365 posts / 1 year
 */
 
-function creditEarned(numOfDaysPosted){
-  var deduct = 30 - numOfDaysPosted;
-  /*
-    minimum 18 posts/day gives 7.5 'post credit'
-    maximum 30 posts/day gives 22.5 days of 'post credit'
-    12 posts leaves a zero balance
-    20 posts leaves a 30 balance
-   */
-  var earned = numOfDaysPosted * .75;
-  /*
-    every day with no post made deducts 1/2 days of 'post credit'
-  */
-  var lost = deduct * .5;
-  return earned - lost;
-}
-// console.log(creditEarned(12));
-
-
-function showBal(obj1, obj2){
-  var bal = obj1.balance - daysChecker(obj2.date.getDate(), new Date().getDate()) * .5;
-  return bal;
-}
-
-
+// router.get('/addpost', function(req, res, next) {
+//   res.send('hi there')
+// });
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
   // Creat new encrypted entry
@@ -69,6 +44,8 @@ router.post('/new', isLoggedIn, function(req, res, next){
   var entry = new Entry({
     subject: eSub,
     body: eBod,
+    upvotes: 1,
+    img: '',
     date: new Date().toLocaleDateString(),
     time: new Date().getTime(),
     authorId: req.user.id
@@ -85,56 +62,23 @@ router.post('/new', isLoggedIn, function(req, res, next){
         if (err) {
           return res.send(err);
         }
-        Entry.find({'authorId': user.id}, function(err, allEntry) {
-          var dayArray = [];
 
+        user.balance += .75;
+        user.entries.push({
+          entryId: entry.id,
+          entryDate: entry.date.getDate()
+        });
+        user.save(function(err){
           if (err) {
-            console.log(err);
+            return console.log(err);
           }
-          for (var i = 1; i < allEntry.length; i++) {
-            // console.log(allEntry[i].time);
-            // console.log(allEntry[i].time-allEntry[i-1].time);
-
-            dayArray.push(allEntry[i].time-allEntry[i-1].time);
-            console.log("DayArray: ", dayArray);
-            return dayArray;
-          } // End for loop
-
-          console.log("dayArray: ", dayArray);
-
-          user.balance += .75;
-          user.entries.push({
-            entryId: entry.id,
-            entryDate: entry.date.getDate()
-          });
-          user.save(function(err){
-            if (err) {
-              return console.log(err);
-            }
-          });
-          res.redirect('/home');
-        })
-
-
-        // user.balance += .75;
-        // user.entries.push({
-        //   entryId: entry.id,
-        //   entryDate: entry.date.getDate()
-        // });
-        // user.save(function(err){
-        //   if (err) {
-        //     return console.log(err);
-        //   }
-        // });
-        // res.redirect('/home');
+        });
+        res.redirect('/home');
 
       }); // End of Entry Save fn
     }else {
       res.redirect('/no_credit');
     }
-
-
-
   })
 });
 
@@ -207,6 +151,20 @@ function isLoggedIn(req, res, next){
   }
   res.redirect('login');
 }
-
+function creditEarned(numOfDaysPosted){
+  var deduct = 30 - numOfDaysPosted;
+  /*
+    minimum 18 posts/day gives 7.5 'post credit'
+    maximum 30 posts/day gives 22.5 days of 'post credit'
+    12 posts leaves a zero balance
+    20 posts leaves a 30 balance
+   */
+  var earned = numOfDaysPosted * .75;
+  /*
+    every day with no post made deducts 1/2 days of 'post credit'
+  */
+  var lost = deduct * .5;
+  return earned - lost;
+}
 
 module.exports = router;

@@ -17,6 +17,9 @@ router.get('/', (req, res) => {
 var now = moment.now('HH:mm:ss');
 console.log("Index right now: ", now);
 
+router.get('/addpost', function(req, res, next) {
+  res.send('hi there')
+});
 
 /* GET Home Page */
 router.get('/home', isLoggedIn, (req, res) => {
@@ -33,17 +36,54 @@ router.get('/home', isLoggedIn, (req, res) => {
       // var days = (1538263852558 / 86400000) * 365;
       console.log("hello world");
 console.log();
-      res.render('home', {entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
+      res.render('home', {user: req.user, entry: entries, text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
     })
   });
 });
+
+router.get('/:id/profile', isLoggedIn, (req, res) => {
+  User.findById({'_id': req.user.id}, function(err, user) {
+    Entry.find({'authorId': user.id}, function(err, entries){
+      if (err) {
+        res.send(err);
+      }
+      var sum;
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].subject = cryptr.decrypt(entries[i].subject);
+        entries[i].body = cryptr.decrypt(entries[i].body);
+      }
+      // var days = (1538263852558 / 86400000) * 365;
+      console.log("hello world");
+console.log();
+      res.render('profile', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
+    })
+  });
+});
+router.get('/:id/entries', isLoggedIn, (req, res) => {
+  User.findById({'_id': req.user.id}, function(err, user){
+    Entry.find({'authorId': user.id}, function(err, entries){
+      if (err) {
+        res.send(err);
+      }
+      var sum;
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].subject = cryptr.decrypt(entries[i].subject);
+        entries[i].body = cryptr.decrypt(entries[i].body);
+      }
+      // var days = (1538263852558 / 86400000) * 365;
+      console.log("hello world");
+console.log();
+      res.render('entry', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
+    })
+  });
+})
 
 /* Render Register Form */
 router.get('/register', (req, res) => {
   res.render('register');
 });
 
-/* POST Rregister New User */
+/* POST Register New User */
 router.post('/register', (req, res) => {
   User.register(new User({
     username: req.body.username,

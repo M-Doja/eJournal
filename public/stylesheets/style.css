@@ -1,6 +1,14 @@
+body,html {
+  background: #C02425;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #F0CB35, #C02425);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #F0CB35, #C02425); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 1080px;
 }
 
 a {
@@ -50,4 +58,35 @@ form.ctrl {
   height: 35px;
   width: 75px;
   border-radius: 6px;
+  m
+}
+
+/* Collapse quick edpost div */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  /* padding: 18px; */
+  width: 100%;
+  border: none;
+  /* text-align: left; */
+  outline: none;
+  font-size: 15px;
+}
+/* .content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+} */
+.qwikBtn {
+  margin: auto;
+}
+
+.content {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
 }

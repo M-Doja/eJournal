@@ -5,6 +5,11 @@ var userSchema = new mongoose.Schema({
   username: String,
   password: String,
   balance: Number,
+  joined: Date,
+  avatar: String,
+  payMember: false,
+  followers: [],
+  following: [],
   entries : []
 });
 

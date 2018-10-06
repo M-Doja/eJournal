@@ -5,6 +5,13 @@ var entrySchema = new mongoose.Schema({
       body: String,
       date: Date,
       time: String,
+      image: String,
+      upvotes: 0,
+      downvotes: 0,
+      comments: {
+        body: String,
+        commenterId: String
+      },
       authorId: {}
 });
 
