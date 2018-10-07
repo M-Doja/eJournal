@@ -55,7 +55,7 @@ router.post('/new', isLoggedIn, function(req, res, next){
     if (err) {
       return res.send(err);
     }
-    if (user.entries.length < 10) {
+    if (user.entries.length < 3) {
 
       // Save entry
       entry.save(function(err, entry){
@@ -127,20 +127,17 @@ router.post('/dataUpdate/:id', function(req, res, next){
 
 /* DELETE ENTRY BY ID */
 router.post('/delete/:id', function(req, res, next){
-    User.findById(req.user.id, function(err, user) {
-      for (let i = 0; i < user.entries.length; i++) {
-        if (user.entries[i] == req.params.id ) {
-          user.entries.splice([i], 1);
-          user.save();
-        }
-      }
-    });
+  User.updateOne(req.user, {$pull: {entries: {entryId :req.params.id }}}, function(err, user) {
+    if (err) {
+      console.log(err);
+    }
     Entry.findOneAndDelete({'_id': req.params.id},  function(err, doc) {
       if (err) {
         res.send(err)
       }
       res.redirect('/home')
     });
+  });
 });
 
 

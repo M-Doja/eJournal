@@ -1,23 +1,19 @@
-const keyPublish = 'pk_test_mqsHIcQhk7MQsVdWM21RbvOp';
-const keySecret = 'sk_test_MH29dqvmnJeafJIZPiJ1SmCt';
-var express = require('express');
-var path = require('path');
-const stripe = require('stripe')(keySecret);
+const config = require('./lib');
+const express = require('express');
+const path = require('path');
+const stripe = require('stripe')(config.Stripe_Test_Key);
 const router = express.Router();
-var mongoose = require('mongoose');
-var passport = require('passport');
-var bodyParser = require('body-parser');
-var LocalStrategy = require('passport-local');
-var passportLocalMongoose = require('passport-local-mongoose');
-var User = require('./models/user');
-var app = express();
+const mongoose = require('mongoose');
+const passport = require('passport');
+const bodyParser = require('body-parser');
+const validator = require('express-validator');
+const LocalStrategy = require('passport-local');
+const passportLocalMongoose = require('passport-local-mongoose');
+const User = require('./models/user');
+const app = express();
 
-
-
-mongoose.connect('mongodb://localhost:27017/Auth-Demo',(err, db) => {
-// mongoose.connect(dbURI, {
+mongoose.connect(config.DB_Dev_URI,(err, db) => {
   useMongoClient: true
-  useNewUrlParser: true
 }, (err, db) => {
   if (err) {
     console.log(err);
@@ -30,8 +26,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(validator());
 app.use(require('express-session')({
-  secret: "fuzzywuzzyorwashe",
+  secret: config.Session_Secret,
   resave: false,
   saveUninitialized: false
 }));
@@ -43,60 +40,29 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((err, req, res, next) => {
+  res.locals.currentUser = req.user;
+  res.locals.login = req.isAuthenticated();
+  res.locals.session = req.session;
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
 // ROUTES
 // ============================
 var mainRoutes = require('./routes/index');
 var entryRoutes = require('./routes/entry');
+var stripeRoutes = require('./routes/stripe');
 
 app.use('/', mainRoutes);
 app.use('/entry', entryRoutes);
+app.use('/stripe', stripeRoutes);
 
 
-app.post('/stripe/charge/thirty', (req, res) => {
-  let token = req.body.stripeToken
-  console.assert(token)
-  const amount = 399
-  stripe.charges.create({
-    amount: amount,
-    currency: 'usd',
-    source: token,
-    description: 'Post Purchase'
-  }, (err, charge) => {
-    if (err) {
-      res.redirect('/stripe/payment-failure?err_msg=' + err.message)
-    } else {
-      console.log('Charged successful')
-			console.log('charge', charge)
-      res.redirect('/payment-success')
-    }
-  })
-});
-
-app.post('/stripe/charge/ninety', (req, res) => {
-  let token = req.body.stripeToken
-  console.assert(token)
-  const amount = 999
-  stripe.charges.create({
-    amount: amount,
-    currency: 'usd',
-    source: token,
-    description: 'Post Purchase'
-  }, (err, charge) => {
-    if (err) {
-      res.redirect('/stripe/payment-failure?err_msg=' + err.message)
-    } else {
-      console.log('Charged successful')
-			console.log('charge', charge)
-      res.redirect('/payment-success')
-    }
-  })
-});
-
-app.get('/payment-success', (req, res, next) => {
-  res.render('payment-success');
-});
-
-
-app.listen(5000,() =>{
+app.listen(config.Port, () => {
   console.log('Now running...');
 });
