@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const Entry = require('../models/entry');
-const User = require('../models/user');
+const Entry = require('../models/Entry');
+const User = require('../models/User');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
@@ -33,9 +33,27 @@ const shareCredit = 60;  /* Shared this and new user joined */
   $19.99 - 365 posts / 1 year
 */
 
-// router.get('/addpost', function(req, res, next) {
-//   res.send('hi there')
-// });
+// RENDER POST ADDITION PAGE
+router.get('/add', isLoggedIn, function(req, res, next) {
+  res.render('newEntry', {user: req.user,text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
+});
+
+/* GET User Entry Page */
+router.get('/all', isLoggedIn, (req, res) => {
+  User.findById({'_id': req.user.id}, function(err, user){
+    Entry.find({'authorId': user.id}, function(err, entries){
+      if (err) {
+        res.send(err);
+      }
+      for (var i = 0; i < entries.length; i++) {
+        entries[i].subject = cryptr.decrypt(entries[i].subject);
+        entries[i].body = cryptr.decrypt(entries[i].body);
+      }
+      res.render('entry', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
+    });
+  });
+});
+
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
   // Creat new encrypted entry
@@ -50,14 +68,13 @@ router.post('/new', isLoggedIn, function(req, res, next){
     time: new Date().getTime(),
     authorId: req.user.id
   });
-  // find current User
   User.findById({'_id': req.user.id}, function(err, user){
     if (err) {
       return res.send(err);
     }
+    // ONLY 3 POSTS ALLOWED
     if (user.entries.length < 3) {
 
-      // Save entry
       entry.save(function(err, entry){
         if (err) {
           return res.send(err);
@@ -141,27 +158,12 @@ router.post('/delete/:id', function(req, res, next){
 });
 
 
-
 function isLoggedIn(req, res, next){
   if (req.isAuthenticated()) {
     return next();
   }
   res.redirect('login');
 }
-function creditEarned(numOfDaysPosted){
-  var deduct = 30 - numOfDaysPosted;
-  /*
-    minimum 18 posts/day gives 7.5 'post credit'
-    maximum 30 posts/day gives 22.5 days of 'post credit'
-    12 posts leaves a zero balance
-    20 posts leaves a 30 balance
-   */
-  var earned = numOfDaysPosted * .75;
-  /*
-    every day with no post made deducts 1/2 days of 'post credit'
-  */
-  var lost = deduct * .5;
-  return earned - lost;
-}
+
 
 module.exports = router;

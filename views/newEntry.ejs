@@ -3,6 +3,8 @@
   <div class="container">
     <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
     <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
+    <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
+    <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
   </div>
 
   <div class="text-center container lead">
@@ -11,12 +13,11 @@
   </div>
 
   <div class="container jumbotron">
-    <a id="logoutBtn"  href="/hope"><button class="" type="button">New Post</button> </a>
 
     <!-- <div class="wrapper"> -->
 
       <form class="box text-center" action="/entry/new" method="post">
-        <h2>Journal Entry Form</h2>
+        <h2>New Entry Form</h2>
         <div class="">
           <label for="subject">Subject</label>
           <input class="form-control"type="text" name="subject" id="subject" value="">

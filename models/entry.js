@@ -6,8 +6,12 @@ var entrySchema = new mongoose.Schema({
       date: Date,
       time: String,
       image: String,
-      upvotes: 0,
-      downvotes: 0,
+      upvotes: [{
+        voterId: String
+      }],
+      downvotes: [{
+        voterId: String
+      }],
       comments: {
         body: String,
         commenterId: String

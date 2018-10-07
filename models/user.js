@@ -5,12 +5,15 @@ var userSchema = new mongoose.Schema({
   username: String,
   password: String,
   balance: Number,
-  joined: Date,
   avatar: String,
   payMember: false,
+  status: String,
+  joined: Date,
   followers: [],
   following: [],
-  entries : []
+  entries : [],
+  messages: [],
+  inbox : []
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });

@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const validator = require('express-validator');
 const LocalStrategy = require('passport-local');
 const passportLocalMongoose = require('passport-local-mongoose');
-const User = require('./models/user');
+const User = require('./models/User');
 const app = express();
 
 mongoose.connect(config.DB_Dev_URI,(err, db) => {
@@ -57,10 +57,12 @@ app.use((err, req, res, next) => {
 var mainRoutes = require('./routes/index');
 var entryRoutes = require('./routes/entry');
 var stripeRoutes = require('./routes/stripe');
+var messageRoutes = require('./routes/message');
 
 app.use('/', mainRoutes);
-app.use('/entry', entryRoutes);
+app.use('/entries', entryRoutes);
 app.use('/stripe', stripeRoutes);
+app.use('/inbox', messageRoutes);
 
 
 app.listen(config.Port, () => {
