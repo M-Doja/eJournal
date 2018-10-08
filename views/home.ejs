@@ -4,7 +4,12 @@
     <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
     <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
     <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
-    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Mailbox</button> </a>
+    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">
+      Inbox
+        <% if(true) { %>
+          <%= user.inbox.length %>
+        <% }%>
+    </button> </a>
   </div>
 
   <div class="text-center container lead">
@@ -16,7 +21,7 @@
     <p>there are currently <%= Users.length %></p>
     <h3><u>Members</u> </h3>
     <% Users.forEach((user) => { %>
-      <p> <b><%= user.username%></b> </p>
+      <p > <b><a style="color:#000;" href="/<%= user.username%>"><%= user.username.toUpperCase() %>'s Profile</a></b> </p>
     <% }) %>
   </div>
 

@@ -4,15 +4,11 @@ const messageSchema = new mongoose.Schema({
   subject: String,
   body: String,
   date: Date,
-  seen: Boolean,
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  },
-  recipient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }
+  seen: false,
+  toId: String,
+  toName: String,
+  fromId: String,
+  fromName: String
 });
 
 module.exports = mongoose.model('Message', messageSchema);

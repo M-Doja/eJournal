@@ -4,16 +4,47 @@
     <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
     <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
     <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
-
+    <% if( currentUser.id === user.id) { %>
+    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Inbox(<%= user.inbox.length %>)</button> </a>
+    <% } %>
   </div>
 
   <div class="text-center container lead">
     <h1 class=""><%= user.username.toUpperCase() %>'s profile Here</h1>
   </div>
 
+  <h3><%= text %></h3>
   <div class="container jumbotron">
-    <div class="wrapper">
+    <div class=" text-center">
       <h3> Profile Data Here</h3>
+
+
+
+
+      <!-- If viewing own profile -->
+      <% if( currentUser.id === user.id) { %>
+        <h3><a href="/inbox/all">Inbox(<%= user.inbox.length %>)</a> </h3>
+        <p>
+          Profile #<%= user.id %> <br>
+
+        </p>
+
+
+        <% if( entry.length === 1) { %>
+        <p><%= entry.length %> doccument</p>
+        <% } else { %>
+          <p><%= entry.length %> documents</p>
+        <% } %>
+
+      <% } else { %>
+        <div class="">
+          <h4>Send Message</h4>
+          <form action="/inbox/<%= user.username %>/new/message" method="post">
+            <input id="m" name="mailBody"autocomplete="off" />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      <% } %>
 
 
     </div>

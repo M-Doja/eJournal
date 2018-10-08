@@ -70,7 +70,7 @@ router.get('/home', isLoggedIn, (req, res) => {
     if (err) {
       console.log(err);
     }
-    Entry.find({'authorId': req.user.id}, function(err, entries) {
+    Entry.find({}, function(err, entries) {
       if (err) {
         console.log(err);
       }
@@ -81,17 +81,31 @@ router.get('/home', isLoggedIn, (req, res) => {
 
 /* GET User Profile Page */
 router.get('/:username', isLoggedIn, (req, res) => {
-  User.findById({'_id': req.user.id}, function(err, user) {
-    Entry.find({'authorId': user.id}, function(err, entries){
-      if (err) {
-        res.send(err);
-      }
-      for (var i = 0; i < entries.length; i++) {
-        entries[i].subject = cryptr.decrypt(entries[i].subject);
-        entries[i].body = cryptr.decrypt(entries[i].body);
-      }
-      res.render('profile', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
-    })
+  User.findOne({'username': req.params.username}, function(err, user) {
+    if (req.params.username === req.user.username) {
+      Entry.find({'authorId': user.id}, function(err, entries){
+        if (err) {
+          res.send(err);
+        }
+        for (var i = 0; i < entries.length; i++) {
+          entries[i].subject = cryptr.decrypt(entries[i].subject);
+          entries[i].body = cryptr.decrypt(entries[i].body);
+        }
+        res.render('profile', {currentUser : req.user, user : user, entry: entries, text: "Welcome back to your page",title: 'Trifecta eJournal', docs: '', profile: ''});
+      })
+    }else {
+      Entry.find({'authorId': user.id}, function(err, entries){
+        if (err) {
+          res.send(err);
+        }
+        for (var i = 0; i < entries.length; i++) {
+          entries[i].subject = cryptr.decrypt(entries[i].subject);
+          entries[i].body = cryptr.decrypt(entries[i].body);
+        }
+        res.render('profile', { currentUser : req.user, user : user, entry: entries, text: "Viewing some one elses profile",title: 'Trifecta eJournal', docs: '', profile: ''});
+      })
+    }
+
   });
 });
 

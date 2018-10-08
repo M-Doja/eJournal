@@ -34,9 +34,16 @@ app.use(require('express-session')({
   saveUninitialized: false
 }));
 
-app.use(middleware);
+app.use(function(req, res, next) {
+    if (req.session.user === null){
+// if user is not logged-in redirect back to login page //
+        res.redirect('/');
+    }   else{
+        next();
+    }
+});
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname + '/public')));
 
 app.use(passport.initialize());
 app.use(passport.session());

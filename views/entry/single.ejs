@@ -19,9 +19,13 @@
                 <p style="font-size: 18px;">Published: <%= doc.date.toLocaleDateString() %></p>
                 <h2><a href="/entry/<%= doc.id %>" ><%= doc.subject %></a></h2>
                   <p><%= doc.body %></p>
-                  <form class="ctrl" action="/entry/delete/<%= doc.id %>" method="post">
-                    <button class="btn"type="submit" data-toggle="tooltip" title="Are you sure ? This is permanent!">delete</button>
-                  </form>
+                  <% if( currentUser.id === doc.authorId) { %>
+                    <form class="ctrl" action="/entry/delete/<%= doc.id %>" method="post">
+                      <button class="btn"type="submit" data-toggle="tooltip" title="Are you sure ? This is permanent!">delete</button>
+                    </form>
+
+                  <% } %>
+
                   <!-- <form class="ctrl" action="/entry/update/<%= doc.id %>" method="post">
                     <button class="btn"type="submit">update</button>
                   </form> -->

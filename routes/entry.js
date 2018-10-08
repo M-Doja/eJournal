@@ -39,10 +39,10 @@ router.get('/add', isLoggedIn, function(req, res, next) {
   res.render('entry/newEntry', {user: req.user,text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
 });
 
-/* GET User Entry Page */
+/* GET Entry Page */
 router.get('/all', isLoggedIn, (req, res) => {
   User.findById({'_id': req.user.id}, function(err, user){
-    Entry.find({'authorId': user.id}, function(err, entries){
+    Entry.find({}, function(err, entries){
       if (err) {
         res.send(err);
       }
@@ -107,7 +107,7 @@ router.get('/:id', isLoggedIn, function(req, res, next){
     }
     entry[0].subject = cryptr.decrypt(entry[0].subject);
     entry[0].body = cryptr.decrypt(entry[0].body)
-    res.render('entry/single', {entry: entry, title: 'eJournal', profile: ''})
+    res.render('entry/single', { currentUser:req.user, entry: entry, title: 'eJournal', profile: ''})
   })
 });
 
