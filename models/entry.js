@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const User = require('./User');
 
 var entrySchema = new mongoose.Schema({
   subject: String,
@@ -7,10 +8,12 @@ var entrySchema = new mongoose.Schema({
       time: String,
       image: String,
       upvotes: [{
-        voterId: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
       }],
       downvotes: [{
-        voterId: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
       }],
       comments: {
         body: String,

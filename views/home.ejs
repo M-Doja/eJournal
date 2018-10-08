@@ -10,8 +10,18 @@
   <div class="text-center container lead">
     <h1 class=""><%= title %></h1>
     <p>Welcome <%= user.username.toUpperCase() %> to <%= title %> </p>
-    <p>there are currently <%= Users.length %> members</p>
   </div>
+
+  <div class="text-center">
+    <p>there are currently <%= Users.length %></p>
+    <h3><u>Members</u> </h3>
+    <% Users.forEach((user) => { %>
+      <p> <b><%= user.username%></b> </p>
+    <% }) %>
+  </div>
+
+
+
 
   <div class="container jumbotron">
     <!-- <div class="wrapper"> -->
@@ -26,7 +36,7 @@
     <button type="button" class="collapsible">Quick Post</button>
 
     <div class="content">
-      <form class="box text-center" action="/entry/new" method="post">
+      <form class="box text-center" action="/entries/new" method="post">
         <h2>Journal Entry Form</h2>
         <div class="">
           <label for="subject">Subject</label>

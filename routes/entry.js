@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
+const { body, validationResult } = require('express-validator/check');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
 const Cryptr = require('cryptr');
@@ -35,7 +36,7 @@ const shareCredit = 60;  /* Shared this and new user joined */
 
 // RENDER POST ADDITION PAGE
 router.get('/add', isLoggedIn, function(req, res, next) {
-  res.render('newEntry', {user: req.user,text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
+  res.render('entry/newEntry', {user: req.user,text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
 });
 
 /* GET User Entry Page */
@@ -49,7 +50,7 @@ router.get('/all', isLoggedIn, (req, res) => {
         entries[i].subject = cryptr.decrypt(entries[i].subject);
         entries[i].body = cryptr.decrypt(entries[i].body);
       }
-      res.render('entry', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
+      res.render('entry/allEntries', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
     });
   });
 });
@@ -62,8 +63,6 @@ router.post('/new', isLoggedIn, function(req, res, next){
   var entry = new Entry({
     subject: eSub,
     body: eBod,
-    upvotes: 1,
-    img: '',
     date: new Date().toLocaleDateString(),
     time: new Date().getTime(),
     authorId: req.user.id
@@ -108,7 +107,7 @@ router.get('/:id', isLoggedIn, function(req, res, next){
     }
     entry[0].subject = cryptr.decrypt(entry[0].subject);
     entry[0].body = cryptr.decrypt(entry[0].body)
-    res.render('single', {entry: entry, title: 'eJournal', profile: ''})
+    res.render('entry/single', {entry: entry, title: 'eJournal', profile: ''})
   })
 });
 

@@ -1,4 +1,4 @@
-<% include partials/header %>
+<% include ../partials/header %>
 
     <div class="text-center container lead">
       <h1 class=""><%= title %></h1>
@@ -9,7 +9,7 @@
     <div class="container jumbotron">
 
       <div class=" text-center">
-              <form class="box text-center" action="/entry/dataUpdate/<%= ent[0].id %>" method="post">
+              <form class="box text-center" action="/entries/dataUpdate/<%= ent[0].id %>" method="post">
                 <h2>Data Update Form <%= ent[0].id %></h2>
               <div class="">
                 <label for="subject">Subject</label>
@@ -23,7 +23,7 @@
               <div class="">
 
                 <button type="submit" class="btn " name="button">Save Editted Data</button>
-                <a href="/entry/<%= ent[0].id %>" class="cancelEditBtn">Cancel</a>
+                <a href="/entries/<%= ent[0].id %>" class="cancelEditBtn">Cancel</a>
               </div>
             </form>
 
@@ -32,4 +32,4 @@
       </div>
     </div>
 
-<% include partials/footer %>
+<% include ../partials/footer %>

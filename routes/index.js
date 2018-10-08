@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Entry = require('../models/Entry');
+const { body, validationResult } = require('express-validator/check');
 const User = require('../models/User');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
@@ -41,7 +42,14 @@ router.post('/login', passport.authenticate('local', {
 }), (req, res) => {});
 
 /* POST Register New User */
-router.post('/register', (req, res) => {
+router.post('/register', [
+    body('username')
+      .isLength({ min: 1 })
+      .withMessage('Please enter a name'),
+    body('password')
+      .isLength({ min: 1 })
+      .withMessage('Please enter an password'),
+  ], (req, res) => {
   User.register(new User({
     username: req.body.username,
     balance: 30
