@@ -13,6 +13,10 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/User');
 const app = express();
 
+if (process.getgid) {
+   console.log('Current gid: ' + process.getgid());
+}
+
 mongoose.connect(config.DB_Dev_URI,(err, db) => {
   useMongoClient: true
 }, (err, db) => {

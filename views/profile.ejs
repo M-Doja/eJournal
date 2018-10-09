@@ -1,13 +1,13 @@
 <% include partials/header %>
 
-  <div class="container">
+  <!-- <div class="container">
     <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
     <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
     <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
     <% if( currentUser.id === user.id) { %>
-    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Inbox(<%= user.inbox.length %>)</button> </a>
+    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Inbox</button> </a>
     <% } %>
-  </div>
+  </div> -->
 
   <div class="text-center container lead">
     <h1 class=""><%= user.username.toUpperCase() %>'s profile Here</h1>
@@ -23,7 +23,6 @@
 
       <!-- If viewing own profile -->
       <% if( currentUser.id === user.id) { %>
-        <h3><a href="/inbox/all">Inbox(<%= user.inbox.length %>)</a> </h3>
         <p>
           Profile #<%= user.id %> <br>
 
@@ -40,7 +39,8 @@
         <div class="">
           <h4>Send Message</h4>
           <form action="/inbox/<%= user.username %>/new/message" method="post">
-            <input id="m" name="mailBody"autocomplete="off" />
+            <input id="m" autofocus name="mailSubject"autocomplete="off" />
+            <textarea name="mailBody" rows="8" autocomplete="off" cols="80"></textarea>
             <button type="submit">Send</button>
           </form>
         </div>

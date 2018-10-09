@@ -1,17 +1,5 @@
 <% include partials/header %>
 
-  <div class="container">
-    <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
-    <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
-    <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
-    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">
-      Inbox
-        <% if(true) { %>
-          <%= user.inbox.length %>
-        <% }%>
-    </button> </a>
-  </div>
-
   <div class="text-center container lead">
     <h1 class=""><%= title %></h1>
     <p>Welcome <%= user.username.toUpperCase() %> to <%= title %> </p>
@@ -25,11 +13,7 @@
     <% }) %>
   </div>
 
-
-
-
   <div class="container jumbotron">
-    <!-- <div class="wrapper"> -->
     <div class="text-center">
       <% if(entry.length === 1) { %>
         <p> You have <%= entry.length %> document available.</p>
@@ -38,9 +22,11 @@
       <% } %>
     </div>
 
-    <button type="button" class="collapsible">Quick Post</button>
+    <div class="text-center">
+      <button class="text-center"type="button" data-toggle="collapse" data-target="#demo"><b><u>Quick Posting</u> </b>  </button><br><br>
 
-    <div class="content">
+    </div>
+    <div  id="demo" class="collapse">
       <form class="box text-center" action="/entries/new" method="post">
         <h2>Journal Entry Form</h2>
         <div class="">
@@ -58,47 +44,41 @@
         </div>
       </form>
     </div>
-    <script>
-      var coll = document.getElementsByClassName("collapsible");
-      var i;
 
-      for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-          this.classList.toggle("active");
-          var content = this.nextElementSibling;
-          if (content.style.maxHeight){
-            content.style.maxHeight = null;
-          } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-          }
-        });
-      }
-    </script>
-
-
-
-      <!-- <div style=""class="box text-center" id="formDisplay">
-        <% if(entry.length === 1) { %>
-          <p> You have <%= entry.length %> document available.</p>
-        <% } else {%>
-          <p> You have <%= entry.length %> documents available.</p>
-        <% } %>
-        <div class="" id="docDisplay">
+    <div style=""class="box text-center" id="formDisplay">
+      <% if(entry.length === 1) { %>
+        <p> You have <%= entry.length %> document available.</p>
+      <% } else {%>
+        <p> You have <%= entry.length %> documents available.</p>
+      <% } %>
+      <div class="" id="">
         <% if(entry.length > 0){ %>
-
+        <div class="container cardholder" >
           <% entry.forEach(function(doc){ %>
-            <div class="doc" >
-              <h2><a href="/entry/<%= doc.id %>" ><%= doc.subject %></a></h2>
-
-                <p style="font-size: 18px;">Published: <%= doc.date %></p>
+            <div class="" style="display: inline-block">
+              <div class="flip-card grid-item">
+                <div class="flip-card-inner">
+                  <div class="flip-card-front">
+                    <img src="" alt="Avatar" style="width:300px;height:300px;">
+                  </div>
+                  <div class="flip-card-back">
+                    <h3><a href="/entries/<%= doc.id %>" ><%= doc.subject.toUpperCase() %></a></h3>
+                    <% Users.forEach((user) => { %>
+                      <% if( user.id === doc.authorId) { %>
+                        <p>Written by: <%= user.username.toUpperCase() %></p>
+                      <%}%>
+                    <% }) %>
+                    <p style="font-size: 18px;">Published: <%= doc.date.toLocaleDateString() %></p>
+                  </div>
+                </div>
+              </div>
             </div>
           <% }); %>
-
-        <% } %>
         </div>
-      </div> -->
-    <!-- </div> -->
-  </div>
+        <% } %>
+
+      </div>
+    </div>
 
 
 <% include partials/footer %>

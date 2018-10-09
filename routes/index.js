@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Entry = require('../models/Entry');
+const Message = require('../models/Message');
 const { body, validationResult } = require('express-validator/check');
 const User = require('../models/User');
 const Cryptr = require('cryptr');
@@ -70,10 +71,12 @@ router.get('/home', isLoggedIn, (req, res) => {
     if (err) {
       console.log(err);
     }
+    console.log("ALl Users: ", allUsers);
     Entry.find({}, function(err, entries) {
       if (err) {
         console.log(err);
       }
+      console.log('THE ENTRIES: ', entries);
       res.render('home', {user: req.user, Users: allUsers, entry: entries, text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
     })
   });
@@ -82,29 +85,9 @@ router.get('/home', isLoggedIn, (req, res) => {
 /* GET User Profile Page */
 router.get('/:username', isLoggedIn, (req, res) => {
   User.findOne({'username': req.params.username}, function(err, user) {
-    if (req.params.username === req.user.username) {
-      Entry.find({'authorId': user.id}, function(err, entries){
-        if (err) {
-          res.send(err);
-        }
-        for (var i = 0; i < entries.length; i++) {
-          entries[i].subject = cryptr.decrypt(entries[i].subject);
-          entries[i].body = cryptr.decrypt(entries[i].body);
-        }
-        res.render('profile', {currentUser : req.user, user : user, entry: entries, text: "Welcome back to your page",title: 'Trifecta eJournal', docs: '', profile: ''});
-      })
-    }else {
-      Entry.find({'authorId': user.id}, function(err, entries){
-        if (err) {
-          res.send(err);
-        }
-        for (var i = 0; i < entries.length; i++) {
-          entries[i].subject = cryptr.decrypt(entries[i].subject);
-          entries[i].body = cryptr.decrypt(entries[i].body);
-        }
-        res.render('profile', { currentUser : req.user, user : user, entry: entries, text: "Viewing some one elses profile",title: 'Trifecta eJournal', docs: '', profile: ''});
-      })
-    }
+
+
+    res.render('profile', {currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
 
   });
 });

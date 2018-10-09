@@ -1,11 +1,6 @@
 <% include ../partials/header %>
 
-  <div class="container">
-    <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
-    <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
-    <!-- <a id="logoutBtn"  href="/entries"><button class="" type="button">Entries</button> </a> -->
-    <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
-  </div>
+
 
   <div class="text-center container lead">
     <h1 class=""><%= title %></h1>
@@ -38,9 +33,9 @@
 
       <div style=""class="box text-center" id="formDisplay">
         <% if(entry.length === 1) { %>
-          <p> You have <%= entry.length %> document available.</p>
+          <p> There is <%= entry.length %> document available.</p>
         <% } else {%>
-          <p> You have <%= entry.length %> documents available.</p>
+          <p> There are <%= entry.length %> documents available.</p>
         <% } %>
         <div class="" id="docDisplay">
         <% if(entry.length > 0){ %>

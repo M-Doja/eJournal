@@ -4,8 +4,8 @@ const moment = require('moment');
 const { body, validationResult } = require('express-validator/check');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
-const Cryptr = require('cryptr');
-const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
+// const Cryptr = require('cryptr');
+// const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
 const shareCredit = 60;  /* Shared this and new user joined */
 
@@ -46,10 +46,10 @@ router.get('/all', isLoggedIn, (req, res) => {
       if (err) {
         res.send(err);
       }
-      for (var i = 0; i < entries.length; i++) {
-        entries[i].subject = cryptr.decrypt(entries[i].subject);
-        entries[i].body = cryptr.decrypt(entries[i].body);
-      }
+      // for (var i = 0; i < entries.length; i++) {
+      //   entries[i].subject = cryptr.decrypt(entries[i].subject);
+      //   entries[i].body = cryptr.decrypt(entries[i].body);
+      // }
       res.render('entry/allEntries', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
     });
   });
@@ -58,11 +58,11 @@ router.get('/all', isLoggedIn, (req, res) => {
 // POST NEW ENTRY
 router.post('/new', isLoggedIn, function(req, res, next){
   // Creat new encrypted entry
-  var eSub = cryptr.encrypt(req.body.subject);
-  var eBod = cryptr.encrypt(req.body.body);
+  // var eSub = cryptr.encrypt(req.body.subject);
+  // var eBod = cryptr.encrypt(req.body.body);
   var entry = new Entry({
-    subject: eSub,
-    body: eBod,
+    subject: req.body.subject,
+    body: req.body.body,
     date: new Date().toLocaleDateString(),
     time: new Date().getTime(),
     authorId: req.user.id
@@ -105,8 +105,8 @@ router.get('/:id', isLoggedIn, function(req, res, next){
     if (err) {
       res.send(err)
     }
-    entry[0].subject = cryptr.decrypt(entry[0].subject);
-    entry[0].body = cryptr.decrypt(entry[0].body)
+    // entry[0].subject = cryptr.decrypt(entry[0].subject);
+    // entry[0].body = cryptr.decrypt(entry[0].body)
     res.render('entry/single', { currentUser:req.user, entry: entry, title: 'eJournal', profile: ''})
   })
 });

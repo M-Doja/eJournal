@@ -7,8 +7,8 @@ const User = require('../models/User');
 const Message = require('../models/Message');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const Cryptr = require('cryptr');
-const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
+// const Cryptr = require('cryptr');
+// const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 
 
 // Show All Messgaes
@@ -17,7 +17,10 @@ router.get('/all', (req, res, next) => {
     if (err) {
       console.log(err);
     }
-    // res.send(allMessages);
+     allMessages.sort(function(a,b){
+      return new Date(b.date) - new Date(a.date);
+    });
+
     res.render('mail/allMail',{title: '', user:req.user,  inbox: allMessages})
   });
 });
@@ -29,7 +32,7 @@ router.post('/:username/new/message', (req, res, next) => {
       console.log( err);
     }
     const newMsg = new Message({
-      subject: 'Testing the mail system',
+      subject: req.body.mailSubject,
       body: req.body.mailBody,
       date: new Date(),
       toId: user.id,
@@ -42,7 +45,9 @@ router.post('/:username/new/message', (req, res, next) => {
       if (err) {
         console.log(err);
       }
-      user.inbox.push(newMsg);
+      user.inbox.push({
+        msgId: newMsg.id,
+      });
       user.save();
       res.redirect('/home');
     })
@@ -60,12 +65,27 @@ router.get('/read/:id',isLoggedIn, (req, res, next) => {
       if (err) {
         console.log(err);
       }
-
-      // console.log(mail);
       res.render('mail/single', { mail:mail, user: req.user, title: ''});
     })
   });
 });
+
+// Delete One Message
+router.post('/remove/:id', (req, res, next) => {
+  User.updateOne(req.user, {$pull: {inbox: {msgId :req.params.id }}}, function(err, user) {
+    if (err) {
+      res.send(err);
+    }
+    Message.findOneAndDelete({'_id': req.params.id},  function(err, doc) {
+      if (err) {
+        res.send(err)
+      }
+      res.redirect('/inbox/all');
+    });
+  });
+});
+
+
 
 function isLoggedIn(req, res, next){
   if (req.isAuthenticated()) {

@@ -90,3 +90,91 @@ form.ctrl {
     overflow: hidden;
     transition: max-height 0.2s ease-out;
 }
+
+
+#inboxAll tr th {
+  text-align: center;
+}
+#inboxAll {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#inboxAll td, #inboxAll th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#inboxAll tr:nth-child(even){background-color: #f2f2f2;}
+
+#inboxAll tr:hover {background-color: #ddd;}
+
+#inboxAll th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+
+
+.cardholder {
+    display: inline-block;
+    /* grid-gap: 10px; */
+    /* background-color: #2196F3; */
+    /* padding: 10px; */
+  }
+  .cardholder > div {
+    /* background-color: rgba(255, 255, 255, 0.8); */
+    /* border: 1px solid black; */
+    text-align: center;
+    font-size: 30px;
+  }
+
+.flip-card {
+  background-color: transparent;
+  margin: 10px;
+  width: 225px;
+  height: 200px;
+  /* border: 1px solid #f1f1f1; */
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  display: inline-block;
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+/* Style the back side */
+.flip-card-back {
+  background-color: dodgerblue;
+  color: white;
+  transform: rotateY(180deg);
+}

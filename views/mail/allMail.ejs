@@ -1,21 +1,16 @@
 <% include ../partials/header %>
-<div class="container">
-  <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
-  <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
-  <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
-  <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
-</div><br>
 
-  <table>
-    <tr align='center'>
-      <th>Date | </th>
-      <th>Subject | </th>
+
+  <table id="inboxAll" class="text-center">
+    <tr>
+      <th>Date </th>
+      <th>Subject</th>
       <th>From</th>
+      <th>Delete</th>
     </tr>
     <% inbox.forEach((mail) => { %>
-      <h1><%= mail.seen %></h1>
       <tr>
-        <td><%= mail.date.toLocaleDateString() %></td>
+        <td><%= mail.date.toLocaleDateString()  %></td>
 
         <% if(  !mail.seen  ) { %>
           <td><a style="color: red" href="/inbox/read/<%= mail._id %>"><%= mail.subject %></a></td>
@@ -24,6 +19,11 @@
         <%}%>
 
         <td><%= mail.fromName %></td>
+        <td>
+          <form class="" action="/inbox/remove/<%= mail._id %>" method="post">
+            <button type="submit"> ( x )</button>
+          </form>
+        </td>
       </tr>
     <% }) %>
 
