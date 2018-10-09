@@ -1,6 +1,22 @@
 <% include ../partials/header %>
+  <% if(user) { %>
+  <div class="container text-center">
+    <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
+    <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
 
+    <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
 
+      <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
+    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">
+      Inbox
+        <% if(true) { %>
+
+        <% }%>
+    </button> </a>
+  </div>
+  <% }%>
+
+  <br><br>
   <table id="inboxAll" class="text-center">
     <tr>
       <th>Date </th>
@@ -13,15 +29,15 @@
         <td><%= mail.date.toLocaleDateString()  %></td>
 
         <% if(  !mail.seen  ) { %>
-          <td><a style="color: red" href="/inbox/read/<%= mail._id %>"><%= mail.subject %></a></td>
+          <td><a style="color: red" href="/inbox/read/<%= mail._id %>"><b><%= mail.subject %></b> </a></td>
         <%} else { %>
-          <td><a style="color:#000;" href="/inbox/read/<%= mail._id %>"><%= mail.subject %></a></td>
+          <td><a style="color:#000;" href="/inbox/read/<%= mail._id %>"><b><%= mail.subject %></b></a></td>
         <%}%>
 
-        <td><%= mail.fromName %></td>
+        <td><a a style="color:#000;" href="/<%= mail.fromName %>"><%= mail.fromName %></a> </td>
         <td>
           <form class="" action="/inbox/remove/<%= mail._id %>" method="post">
-            <button type="submit"> ( x )</button>
+            <button class="delBtn" style="border-radius:5px;"type="submit"><i class="fa fa-trash" style="font-size:20px"></i></button>
           </form>
         </td>
       </tr>

@@ -1,29 +1,41 @@
-<!-- <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
-  	<link rel='stylesheet prefetch' href='https://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.min.css'>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/../stylesheets/style.css' />
-  </head>
-  <body><br><br>
-    <div class="container">
-      <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
-      <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
-      <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
+<% include ../partials/header %>
+  <% if(user) { %>
+  <div class="container text-center">
+    <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
+    <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
+
+    <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
+
       <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
-      <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Inbox</button> </a>
+    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">
+      Inbox
+        <% if(true) { %>
 
-    </div><br> -->
-    <% include ../partials/header %>
-
+        <% }%>
+    </button> </a>
+  </div>
+  <% }%>
 
     <div class="text-center">
-      <h3>Subject:  <%= mail.subject %></h3>
-      <p><b>Message</b>: <%= mail.body %></p>
-      <p><b>From</b>: <%= mail.fromName %></p>
+      <div class="msgCard">
+        <div class="msg">
+          <form class="" action="/inbox/remove/<%= mail._id %>" method="post">
+            <button class="delBtn" id="trashLink" type="submit" ><i class="fa fa-trash" style="font-size:24px"></i></button>
+          </form>
+          <h3> <%= mail.subject %></h3>
+          <p><b>Recieved</b>: <%= mail.date.toDateString() %> | <b>From</b>: <%= mail.fromName %></p>
+          <p><b>Message</b>: <br> <%= mail.body %></p>
+        </div>
+      </div>
+    </div><hr>
+    <div class="replyFormWrap text-center">
+      <form class="replyForm" action="/inbox/<%= mail._id %>/reply" method="post">
+        <input style="border-radius:8px;text-align:center;" type="text" name="mailReplySubject" placeholder="Subject.."><br><br>
+        <textarea id="replyBody" name="mailReply" placeholder="Text here..."></textarea><br>
+
+        <button id="replyBtn"type="submit">Reply</button>
+      </form>
+
     </div>
 
 

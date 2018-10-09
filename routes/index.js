@@ -84,10 +84,13 @@ router.get('/home', isLoggedIn, (req, res) => {
 
 /* GET User Profile Page */
 router.get('/:username', isLoggedIn, (req, res) => {
+  var self;
   User.findOne({'username': req.params.username}, function(err, user) {
+    if (user.id === req.user.id) {
+      self = user; // On own profile page
+    }
 
-
-    res.render('profile', {currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
+    res.render('profile', {currentUser : req.user, profileID: user.username, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
 
   });
 });

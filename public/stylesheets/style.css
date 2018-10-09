@@ -178,3 +178,34 @@ form.ctrl {
   color: white;
   transform: rotateY(180deg);
 }
+
+
+.replyForm textarea {
+  border-radius: 8px;
+  text-align: center;
+  margin: auto;
+  max-width: 500px;
+  height: 75px;
+  width: 100%;
+}
+.msgCard {
+  border: 3px solid #000;
+  margin: 20px auto;
+}
+.msg {
+  background: #fff;
+  padding: 8px;
+}
+#replyBtn{
+  max-width: 100px;
+  height: 35px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: bold;
+}
+#trashLink {
+  float: right;
+}
+.delBtn:hover {
+  background-color: red;
+}

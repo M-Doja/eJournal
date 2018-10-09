@@ -120,7 +120,7 @@ router.post('/update/:id', function(req, res, next){
     }
     // ent[0].subject = cryptr.decrypt(ent[0].subject)
     // ent[0].body = cryptr.decrypt(ent[0].body)
-    res.render('update', { title: 'Express-Trifecta', ent: ent });
+    res.render('update', {user: req.user, title: 'Express-Trifecta', ent: ent });
   })
 });
 

@@ -85,7 +85,58 @@ router.post('/remove/:id', (req, res, next) => {
   });
 });
 
+// Reply To Message
+router.post("/:id/reply", (req, res, next) => {
+  const id = req.params.id;
+  Message.findById({'_id': id}, function(err, msg) {
+    if (err) {
+      console.log(err);
+    }
+    let sub;
+    if (req.body.mailReplySubject) {
+       sub = req.body.mailReplySubject
+    }else {
+       sub = "re: "+msg.subject
+    }
+    const replyMsg = new Message({
+      subject: sub,
+      body: req.body.mailReply,
+      date: new Date(),
+      fromId: req.user.id,
+      fromName: req.user.username,
+      seen: false
+    });
+    User.findById({'_id': msg.fromId }, function(err, user) {
+      if (err) {
+        console.log(err);
+      }
+      replyMsg.toId =  user.id;
+      replyMsg.toName = user.username;
+      replyMsg.save(function(err){
+        if (err) {
+          console.log(err);
+        }
+        user.inbox.push({
+          msgId: replyMsg.id,
+        });
+        user.save();
+        User.findById({'_id': req.user.id}, function(err, curUser) {
+          if (err) {
+            console.log(err);
+          }
+          curUser.sent.push({
+            msgId: replyMsg.id,
+          });
+          curUser.save();
+        res.redirect('/inbox/all');
+       })
+      })
 
+
+    }); //User
+
+  }); //Message
+});
 
 function isLoggedIn(req, res, next){
   if (req.isAuthenticated()) {

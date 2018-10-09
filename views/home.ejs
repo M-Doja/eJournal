@@ -1,4 +1,20 @@
 <% include partials/header %>
+  <% if(user) { %>
+  <div class="container text-center">
+    <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
+    <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
+
+    <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
+
+      <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
+    <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">
+      Inbox
+        <% if(true) { %>
+
+        <% }%>
+    </button> </a>
+  </div>
+  <% }%>
 
   <div class="text-center container lead">
     <h1 class=""><%= title %></h1>
