@@ -94,17 +94,37 @@ router.get('/home', isLoggedIn, (req, res) => {
 
 /* GET User Profile Page */
 router.get('/:username', isLoggedIn, (req, res) => {
-  var self;
   User.findOne({'username': req.params.username}, function(err, user) {
-    if (user.id === req.user.id) {
-      self = user; // On own profile page
+    if (err) {
+      console.log(err);
     }
-
-    res.render('profile', {currentUser : req.user, profileID: user.username, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
-
+    res.render('profile', {currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
   });
 });
 
+router.post('/add/follow/:id', (req, res, next) => {
+  const newFollowId = req.params.id;
+  User.findById({'_id': req.user.id}, function(err, follower){
+    if (err) {
+      console.log(err);
+    }
+    follower.following.push(newFollowId);
+    follower.save(function(err){
+      if (err) {
+        console.log(err);
+      }
+    });
+  });
+  User.findById({'_id': newFollowId}, function(err, followed){
+    followed.followers.push(req.user.id);
+    followed.save(function(err){
+      if (err) {
+        console.log(err);
+      }
+      res.redirect('/home');
+    });
+  })
+});
 
 function isLoggedIn(req, res, next){
   if (req.isAuthenticated()) {

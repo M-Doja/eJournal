@@ -31,9 +31,9 @@
   <div class="container jumbotron">
     <div class="text-center">
       <% if(entry.length === 1) { %>
-        <p> You have <%= entry.length %> document available.</p>
+        <p> There is <%= entry.length %> document available.</p>
       <% } else {%>
-        <p> You have <%= entry.length %> documents available.</p>
+        <p> There are <%= entry.length %> documents available.</p>
       <% } %>
     </div>
 
@@ -61,11 +61,7 @@
     </div>
 
     <div style=""class="box text-center" id="formDisplay">
-      <% if(entry.length === 1) { %>
-        <p> You have <%= entry.length %> document available.</p>
-      <% } else {%>
-        <p> You have <%= entry.length %> documents available.</p>
-      <% } %>
+
       <div class="" id="">
         <% if(entry.length > 0){ %>
         <div class="container cardholder" >

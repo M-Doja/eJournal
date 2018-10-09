@@ -1,23 +1,34 @@
-<% include ../partials/header-b %>
+<% include ../partials/header %>
 
 
 
-    <div class="text-center container jumbotron">
-      <h2><%= entry[0].subject %> found</h2>
-    </div>
-    <a href="/home">Back Home</a><br><br>
+    <!-- <div class="text-center container jumbotron">
+      <h2><%= entry[0].subject %> </h2>
+      <p style="font-size: 18px;">Published: <%= entry[0].date.toDateString() %></p>
+
+    </div> -->
+    <div class="container text-center">
+      <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
+      <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
+      <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
+      <a id="logoutBtn"  href="/<%= currentUser.username %>"><button class="" type="button">Profile</button> </a>
+      <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Inbox</button> </a>
+    </div><br><br>
 
     <div class="text-center container lead">
 
         <div style=""class="box text-center" id="">
 
-          <div class="" id="docDisplay">
+          <div class="" id="">
           <% if(entry.length > 0){ %>
+            <div style="color:#000;" class="text-center  jumbotron">
+              <h2><b><%= entry[0].subject %></b> </h2>
+              <p style="font-size: 18px;">Published: <%= entry[0].date.toDateString() %></p>
 
+            </div>
             <% entry.forEach(function(doc){ %>
               <div class="" >
-                <p style="font-size: 18px;">Published: <%= doc.date.toLocaleDateString() %></p>
-                <h2><a href="/entry/<%= doc.id %>" ><%= doc.subject %></a></h2>
+                <h3><b><%= doc.subject %></b> </h3>
                   <p><%= doc.body %></p>
                   <% if( currentUser.id === doc.authorId) { %>
                     <form class="ctrl" action="/entry/delete/<%= doc.id %>" method="post">
