@@ -24,8 +24,8 @@
       <!-- If viewing own profile -->
       <% if( currentUser.id === user.id) { %>
         <button type="button" name="button"><%= user.followers.length %> Followers</button>
-        <button type="button" name="button">Following <%= user.following.length %></button>
-        
+        <button type="button" name="button">Following <%= user.following.length %></button><br>
+
         <p>
           Profile #<%= user.id %> <br>
 

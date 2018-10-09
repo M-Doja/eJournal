@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const config = require('../lib');
 const stripe = require('stripe')(config.Stripe_Test_Key);
+const User = require('../models/User');
+
 
 router.post('/charge/thirty', (req, res) => {
   let token = req.body.stripeToken
