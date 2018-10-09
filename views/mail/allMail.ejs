@@ -9,8 +9,8 @@
       <a id="logoutBtn"  href="/<%= user.username %>"><button class="" type="button">Profile</button> </a>
     <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">
       Inbox
-        <% if(true) { %>
-
+        <% if(unread) { %>
+          (<%= unread %>)
         <% }%>
     </button> </a>
   </div>

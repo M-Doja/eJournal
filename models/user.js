@@ -13,6 +13,7 @@ var userSchema = new mongoose.Schema({
   following: [],
   entries : [],
   sent: [],
+  seen: [],
   inbox : []
 });
 

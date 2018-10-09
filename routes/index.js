@@ -76,9 +76,19 @@ router.get('/home', isLoggedIn, (req, res) => {
       if (err) {
         console.log(err);
       }
-      console.log('THE ENTRIES: ', entries);
-      res.render('home', {user: req.user, Users: allUsers, entry: entries, text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
-    })
+      var numUnRead = req.user.inbox.length - req.user.seen.length;
+      console.log("Unread: ", numUnRead);
+      res.render('home', {
+        unread: numUnRead,
+        user: req.user,
+        Users: allUsers,
+        entry: entries,
+        text: "",
+        title: 'Trifecta Community eJournal',
+        docs: '',
+        profile: ''
+      });
+    });
   });
 });
 

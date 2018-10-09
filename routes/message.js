@@ -13,6 +13,7 @@ const io = require('socket.io')(http);
 
 // Show All Messgaes
 router.get('/all', (req, res, next) => {
+  var numUnRead = req.user.inbox.length - req.user.seen.length;
   Message.find({'toId': req.user.id}, function(err, allMessages) {
     if (err) {
       console.log(err);
@@ -21,7 +22,8 @@ router.get('/all', (req, res, next) => {
       return new Date(b.date) - new Date(a.date);
     });
 
-    res.render('mail/allMail',{title: '', user:req.user,  inbox: allMessages})
+
+    res.render('mail/allMail',{unread: numUnRead, title: '', user:req.user,  inbox: allMessages})
   });
 });
 
@@ -56,16 +58,33 @@ router.post('/:username/new/message', (req, res, next) => {
 
 // Read One Message
 router.get('/read/:id',isLoggedIn, (req, res, next) => {
+  if ( req.user.seen.length >= 1) {
+    var numUnRead = req.user.inbox.length - req.user.seen.length;
+  }
   var seenMail = {
     seen: true
   }
   Message.findOneAndUpdate({'_id': req.params.id}, seenMail)
   .then(function(mail){
+    User.findById({'_id': req.user.id}, function(err, user){
+      for (var i = 0; i < user.seen.length; i++) {
+        console.log(user.seen[i]);
+      }
+      if (mail.seen === false) {
+        user.seen.push(mail.id);
+      }
+      
+      user.save(function(err){
+        if (err) {
+          console.log(err);
+        }
+      });
+    })
     Message.findOne({'_id': req.params.id}, function(err, mail){
       if (err) {
         console.log(err);
       }
-      res.render('mail/single', { mail:mail, user: req.user, title: ''});
+      res.render('mail/single', {unread: numUnRead, mail:mail, user: req.user, title: ''});
     })
   });
 });
