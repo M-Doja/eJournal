@@ -15,6 +15,10 @@ a {
   color: #00B7FF;
 }
 
+.voteForm {
+  display: inline-block;
+}
+
 .wrapper {
   display: grid;
   grid-template-columns: auto auto;

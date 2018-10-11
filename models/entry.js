@@ -8,12 +8,10 @@ var entrySchema = new mongoose.Schema({
       time: String,
       image: String,
       upvotes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        voterId: String
       }],
       downvotes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        voterId: String
       }],
       comments: {
         body: String,

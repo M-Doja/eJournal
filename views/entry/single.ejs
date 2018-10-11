@@ -31,11 +31,26 @@
                 <h3><b><%= doc.subject %></b> </h3>
                   <p><%= doc.body %></p>
                   <% if( currentUser.id === doc.authorId) { %>
-                    <form class="ctrl" action="/entry/delete/<%= doc.id %>" method="post">
+                    <form class="ctrl" action="/entries/delete/<%= doc.id %>" method="post">
                       <button class="btn"type="submit" data-toggle="tooltip" title="Are you sure ? This is permanent!">delete</button>
                     </form>
 
+                  <% }else{ %>
+
+                    <form class="voteForm up" action="/entries/<%= doc.id %>/vote/up" method="post">
+                      <button type="submit"> <i class="fa fa-thumbs-up"></i>  <%= doc.upvotes.length %></button>
+                    </form>
+                    <form class="voteForm down" action="/entries/<%= doc.id %>/vote/down" method="post">
+                      <button type="submit"> <i class="fa fa-thumbs-down"></i> <%= doc.downvotes.length %></button>
+                    </form>
                   <% } %>
+
+                  <!-- <form class="voteForm up" action="/entries/<%= doc.id %>/vote/up" method="post">
+                    <button type="submit"> <i class="fa fa-thumbs-up"></i>  <%= doc.upvotes.length %></button>
+                  </form>
+                  <form class="voteForm down" action="/entries/<%= doc.id %>/vote/down" method="post">
+                    <button type="submit"> <i class="fa fa-thumbs-down"></i> <%= doc.upvotes.length %></button>
+                  </form> -->
 
                   <!-- <form class="ctrl" action="/entry/update/<%= doc.id %>" method="post">
                     <button class="btn"type="submit">update</button>
