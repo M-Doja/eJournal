@@ -98,17 +98,36 @@ router.get('/:username', isLoggedIn, (req, res) => {
     if (err) {
       console.log(err);
     }
-    res.render('profile', {currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
+    var iFollowYou;
+    req.user.following.forEach((followedUser) => {
+      if (followedUser.id === user.id) {
+        iFollowYou = true;
+        return iFollowYou;
+      }
+    });
+    res.render('profile', { isFollowing: iFollowYou, currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
   });
 });
 
-router.post('/add/follow/:id', (req, res, next) => {
+// Add User to Follow
+router.post('/add/follow/:id', isLoggedIn, (req, res, next) => {
   const newFollowId = req.params.id;
   User.findById({'_id': req.user.id}, function(err, follower){
     if (err) {
       console.log(err);
     }
-    follower.following.push(newFollowId);
+    var alreadyFollowing;
+    follower.following.forEach((followedUser) => {
+      if (newFollowId === followedUser.id) {
+        alreadyFollowing = true;
+        return alreadyFollowing
+      }
+    });
+    if (!alreadyFollowing) {
+      follower.following.push({
+        id: newFollowId
+      });
+    }
     follower.save(function(err){
       if (err) {
         console.log(err);
@@ -116,7 +135,18 @@ router.post('/add/follow/:id', (req, res, next) => {
     });
   });
   User.findById({'_id': newFollowId}, function(err, followed){
-    followed.followers.push(req.user.id);
+    var alreadyAFollower;
+    followed.followers.forEach((followingUser) => {
+      if (req.user.id === followingUser.id) {
+        alreadyAFollower = true;
+        return alreadyAFollower
+      }
+    });
+    if (!alreadyAFollower) {
+      followed.followers.push({
+        id: req.user.id
+      });
+    }
     followed.save(function(err){
       if (err) {
         console.log(err);
@@ -125,6 +155,29 @@ router.post('/add/follow/:id', (req, res, next) => {
     });
   })
 });
+
+// Remove Followed User
+router.post('/remove/follower/:id', isLoggedIn, (req, res, next) => {
+  User.updateOne(req.user, {$pull: {following: {id :req.params.id }}}, function(err) {
+    if (err) {
+      res.send(err);
+    }
+  });
+  User.findById({'_id': req.params.id}, function(err, user) {
+    if (err) {
+      res.send(err);
+    }
+    User.updateOne(user, {$pull: {followers: {id :req.user.id }}}, function(err) {
+      if (err) {
+        res.send(err);
+      }
+      res.redirect('/home');
+    });
+  })
+});
+
+
+
 
 function isLoggedIn(req, res, next){
   if (req.isAuthenticated()) {

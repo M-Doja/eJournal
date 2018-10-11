@@ -40,9 +40,16 @@
         <% } %>
 
       <% } else { %>
-        <form class="" action="/add/follow/<%= user.id %>" method="post">
-          <button type="submit" >Follow <%= user.username %></button>
-        </form><br>
+          <% if( isFollowing ) { %>
+            <form class="" action="/remove/follower/<%= user.id %>" method="post">
+              <button type="submit" >Un-Follow <%= user.username %></button>
+            </form><br>
+          <%} else { %>
+            <form class="" action="/add/follow/<%= user.id %>" method="post">
+              <button type="submit" >Follow <%= user.username %></button>
+            </form><br>
+          <%}%>
+
         <div class="">
           <h4>Send Message</h4>
           <form action="/inbox/<%= user.username %>/new/message" method="post">
