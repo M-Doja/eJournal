@@ -163,7 +163,7 @@ router.post('/:id/vote/up' , isLoggedIn, (req, res, next) => {
     }
     if (voteDn) {
       Entry.updateOne(singleEntry, {$pull: {downvotes: {voterId: req.user.id}}}, (err, result) => {
-        console.log("result: ", result);
+        // console.log("result: ", result);
       });
     }
     if (!voteUp) {
@@ -200,7 +200,7 @@ router.post('/:id/vote/down' , isLoggedIn, (req, res, next) => {
 
     if (voteUp) {
       Entry.updateOne(singleEntry, {$pull: {upvotes: {voterId: req.user.id}}}, (err, result) => {
-        console.log("result: ", result);
+        // console.log("result: ", result);
       });
     }
     if (!voteDn) {

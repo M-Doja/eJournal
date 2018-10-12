@@ -71,13 +71,11 @@ router.get('/home', isLoggedIn, (req, res) => {
     if (err) {
       console.log(err);
     }
-    console.log("ALl Users: ", allUsers);
     Entry.find({}, function(err, entries) {
       if (err) {
         console.log(err);
       }
       var numUnRead = req.user.inbox.length - req.user.seen.length;
-      console.log("Unread: ", numUnRead);
       res.render('home', {
         unread: numUnRead,
         user: req.user,
@@ -112,6 +110,7 @@ router.get('/:username', isLoggedIn, (req, res) => {
 // Add User to Follow
 router.post('/add/follow/:id', isLoggedIn, (req, res, next) => {
   const newFollowId = req.params.id;
+  var url;
   User.findById({'_id': req.user.id}, function(err, follower){
     if (err) {
       console.log(err);
@@ -136,6 +135,7 @@ router.post('/add/follow/:id', isLoggedIn, (req, res, next) => {
   });
   User.findById({'_id': newFollowId}, function(err, followed){
     var alreadyAFollower;
+    url = followed.username;
     followed.followers.forEach((followingUser) => {
       if (req.user.id === followingUser.id) {
         alreadyAFollower = true;
@@ -151,9 +151,10 @@ router.post('/add/follow/:id', isLoggedIn, (req, res, next) => {
       if (err) {
         console.log(err);
       }
-      res.redirect('/home');
     });
-  })
+   res.render('profile', { isFollowing: 'iFollowYou', currentUser : req.user, user : followed, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''})
+  });
+
 });
 
 // Remove Followed User
@@ -171,8 +172,9 @@ router.post('/remove/follower/:id', isLoggedIn, (req, res, next) => {
       if (err) {
         res.send(err);
       }
-      res.redirect('/home');
     });
+    res.redirect(`/${user.username}`)
+
   })
 });
 
