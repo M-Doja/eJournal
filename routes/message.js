@@ -5,14 +5,13 @@ const moment = require('moment');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
 const Message = require('../models/Message');
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const Mid = require('../middleware');
 // const Cryptr = require('cryptr');
 // const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 
 
 // Show All Messgaes
-router.get('/all', (req, res, next) => {
+router.get('/all', Mid.isLoggedIn, (req, res, next) => {
   var numUnRead = req.user.inbox.length - req.user.seen.length;
   Message.find({'toId': req.user.id}, function(err, allMessages) {
     if (err) {
@@ -21,12 +20,12 @@ router.get('/all', (req, res, next) => {
      allMessages.sort(function(a,b){
       return new Date(b.date) - new Date(a.date);
     });
-    res.render('mail/allMail',{unread: numUnRead, title: '', user:req.user,  inbox: allMessages})
+    res.render('mail/allMail',{unread: numUnRead, title: 'Link Connect', user:req.user,  inbox: allMessages})
   });
 });
 
 // POST New Message
-router.post('/:username/new/message', (req, res, next) => {
+router.post('/:username/new/message', Mid.isLoggedIn, (req, res, next) => {
   User.findOne({'username': req.params.username}, function(err, user){
     if (err) {
       console.log( err);
@@ -55,7 +54,7 @@ router.post('/:username/new/message', (req, res, next) => {
 });
 
 // Read One Message
-router.get('/read/:id',isLoggedIn, (req, res, next) => {
+router.get('/read/:id',Mid.isLoggedIn, (req, res, next) => {
   var numUnRead = req.user.inbox.length - req.user.seen.length;
   var seenMail = {
     seen: true
@@ -76,13 +75,13 @@ router.get('/read/:id',isLoggedIn, (req, res, next) => {
       if (err) {
         console.log(err);
       }
-      res.render('mail/single', {unread: numUnRead, mail:mail, user: req.user, title: ''});
+      res.render('mail/single', {unread: numUnRead, mail:mail, user: req.user, title: 'Link Connect'});
     })
   });
 });
 
 // Delete One Message
-router.post('/remove/:id', (req, res, next) => {
+router.post('/remove/:id', Mid.isLoggedIn, (req, res, next) => {
   User.updateOne(req.user, {$pull: {inbox: {msgId :req.params.id }}}, function(err, user) {
     if (err) {
       res.send(err);
@@ -97,7 +96,7 @@ router.post('/remove/:id', (req, res, next) => {
 });
 
 // Reply To Message
-router.post("/:id/reply", (req, res, next) => {
+router.post("/:id/reply", Mid.isLoggedIn, (req, res, next) => {
   const id = req.params.id;
   Message.findById({'_id': id}, function(err, msg) {
     if (err) {
@@ -145,13 +144,5 @@ router.post("/:id/reply", (req, res, next) => {
     }); //User
   }); //Message
 });
-
-function isLoggedIn(req, res, next){
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('login');
-}
-
 
 module.exports = router;

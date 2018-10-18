@@ -5,14 +5,14 @@ const Entry = require('../models/Entry');
 const Message = require('../models/Message');
 const { body, validationResult } = require('express-validator/check');
 const User = require('../models/User');
-const Cryptr = require('cryptr');
-const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
 const moment = require('moment');
+const Mid = require('../middleware');
+const RM = require('./routeMethods');
 
 
 /* Render Login / Registration Page */
 router.get('/', (req, res) => {
-  res.render('index', {text: "", title:""});
+  res.render('index', {text: "", title:"Link Connect", unread: '', user:req.user });
 });
 
 /* Render Login Form */
@@ -26,8 +26,8 @@ router.get('/register', (req, res) => {
 });
 
 /* Render Credit Purchase Page */
-router.get('/no_credit', isLoggedIn, (req, res, next) => {
-  res.render('nocredit', {title: ''})
+router.get('/no_credit', Mid.isLoggedIn, (req, res, next) => {
+  res.render('nocredit', {title: 'Link Connect'})
 });
 
 /* GET Log Out Page*/
@@ -66,7 +66,7 @@ router.post('/register', [
 });
 
 /* GET Home Page */
-router.get('/home', isLoggedIn, (req, res) => {
+router.get('/home', Mid.isLoggedIn, (req, res) => {
   User.find({}, function(err, allUsers){
     if (err) {
       console.log(err);
@@ -82,7 +82,7 @@ router.get('/home', isLoggedIn, (req, res) => {
         Users: allUsers,
         entry: entries,
         text: "",
-        title: 'Trifecta Community eJournal',
+        title: 'Link Connect',
         docs: '',
         profile: ''
       });
@@ -91,24 +91,23 @@ router.get('/home', isLoggedIn, (req, res) => {
 });
 
 /* GET User Profile Page */
-router.get('/:username', isLoggedIn, (req, res) => {
-  User.findOne({'username': req.params.username}, function(err, user) {
-    if (err) {
-      console.log(err);
-    }
-    var iFollowYou;
-    req.user.following.forEach((followedUser) => {
-      if (followedUser.id === user.id) {
-        iFollowYou = true;
-        return iFollowYou;
-      }
-    });
-    res.render('profile', { isFollowing: iFollowYou, currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''});
-  });
+router.get('/:username', Mid.isLoggedIn, (req, res) => {
+  var reqParams = req.params.username;
+  RM.GetProfile(req, res, reqParams);
 });
 
+router.get('/community/all', (req, res, next) => {
+  User.find({}, function(err, users){
+    if (err) {
+      console.log(err);
+    }else {
+      var numUnRead = req.user.inbox.length - req.user.seen.length;
+      res.render('community', {unread:numUnRead, title: '', users: users,user : req.user,  entry:[], text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''})
+    }
+  })
+});
 // Add User to Follow
-router.post('/add/follow/:id', isLoggedIn, (req, res, next) => {
+router.post('/add/follow/:id', Mid.isLoggedIn, (req, res, next) => {
   const newFollowId = req.params.id;
   var url;
   User.findById({'_id': req.user.id}, function(err, follower){
@@ -152,13 +151,13 @@ router.post('/add/follow/:id', isLoggedIn, (req, res, next) => {
         console.log(err);
       }
     });
-   res.render('profile', { isFollowing: 'iFollowYou', currentUser : req.user, user : followed, entry:[], text: "Welcome back to your page",title: 'Trifecta eJournal', msg: [], docs: '', profile: ''})
+   res.render('profile', { isFollowing: 'iFollowYou', currentUser : req.user, user : followed, entry:[], text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''})
   });
 
 });
 
 // Remove Followed User
-router.post('/remove/follower/:id', isLoggedIn, (req, res, next) => {
+router.post('/remove/follower/:id', Mid.isLoggedIn, (req, res, next) => {
   User.updateOne(req.user, {$pull: {following: {id :req.params.id }}}, function(err) {
     if (err) {
       res.send(err);
@@ -177,15 +176,5 @@ router.post('/remove/follower/:id', isLoggedIn, (req, res, next) => {
 
   })
 });
-
-
-
-
-function isLoggedIn(req, res, next){
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('login');
-}
 
 module.exports = router;

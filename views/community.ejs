@@ -1,0 +1,44 @@
+<% include partials/header %>
+<style media="screen">
+  nav #Communitybtn {color:#fff;font-weight: bold;}
+
+  /* Community Member Styles  */
+  .item {
+    display: inline-block;
+    border: 2px solid #000;
+    padding: 15px;
+    font-size: 18px;
+    color:#000;
+    text-align: center;
+  }
+  .item a { color: #000; font-weight: bold;}
+  .item img {
+    width: 150px;
+    height: 150px;
+    display: block;
+    border-bottom:1px solid #000;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+</style>
+<% include partials/nav %>
+
+<h3><%= title %> Community
+</h3>
+
+<p><%= users.length%> memebers in our community</p>
+
+<div class="container">
+  <ul>
+    <% users.forEach(function(user){ %>
+      <li class="item">
+        <img class="avatar"src="/img/profile_avatar.png" alt="">
+        <a href="/<%= user.username %>"><%= user.username%> </a>
+      </li>
+    <%})%>
+  </ul>
+
+</div>
+
+<% include partials/footer %>

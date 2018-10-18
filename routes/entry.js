@@ -4,55 +4,27 @@ const moment = require('moment');
 const { body, validationResult } = require('express-validator/check');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
-// const Cryptr = require('cryptr');
-// const cryptr = new Cryptr('Z1%UrQ7_d6F@3E!db2eg');
-const allStarCredit = 30 /* post every day recieve 30 'post credit bonus'*/
-const shareCredit = 60;  /* Shared this and new user joined */
-
-
-/*
-  THE IDEA: This serves as a personal eJournal where a user's data/posts
-  are encrypted and stored securely on a database. As such this is based on
-  the idea that a user is making one post per day and using this application
-  as a daily journal.
-  Below is a description of the initial package setup and purchase options.
-
-  App cost - $2.99
-
-  Initial Package:
-  You purchase the eJournal app and recieve 30 posts or 30 days free
-  noPost deductions will not be active during intial 30 day period
-  number of posts will deduct upon use during period
-  all posts made will earn post credits
-  if all 30 consectutively used All-Star credit given
-  Need 18 posts per month min to start earning post credit
-
-  Purchase additional posts
-  $3.99 - 30 posts / 1 month
-  $9.99 - 90 posts / 3 months
-  $14.99 - 180 posts / 6 months
-  $19.99 - 365 posts / 1 year
-*/
+const Mid = require('../middleware');
 
 // RENDER POST ADDITION PAGE
-router.get('/add', isLoggedIn, function(req, res, next) {
-  res.render('entry/newEntry', {user: req.user,text: "",title: 'Trifecta Community eJournal', docs: '', profile: ''});
+router.get('/add', Mid.isLoggedIn, function(req, res, next) {
+  res.render('entry/newEntry', {user: req.user,text: "",title: 'Link Connect', docs: '', profile: ''});
 });
 
 /* GET Entry Page */
-router.get('/all', isLoggedIn, (req, res) => {
+router.get('/all', Mid.isLoggedIn, (req, res) => {
   User.findById({'_id': req.user.id}, function(err, user){
     Entry.find({}, function(err, entries){
       if (err) {
         res.send(err);
       }
-      res.render('entry/allEntries', { user : req.user, entry: entries, text: "",title: 'Trifecta eJournal', docs: '', profile: ''});
+      res.render('entry/allEntries', { user : req.user, entry: entries, text: "",title: 'Link Connect', docs: '', profile: ''});
     });
   });
 });
 
 // POST NEW ENTRY
-router.post('/new', isLoggedIn, function(req, res, next){
+router.post('/new', Mid.isLoggedIn, function(req, res, next){
   var entry = new Entry({
     subject: req.body.subject,
     body: req.body.body,
@@ -92,29 +64,29 @@ router.post('/new', isLoggedIn, function(req, res, next){
 });
 
 // GET SINGLE ENTRY
-router.get('/:id', isLoggedIn, function(req, res, next){
+router.get('/:id', Mid.isLoggedIn, function(req, res, next){
   var id = req.params.id;
   Entry.find({'_id': id}, function(err, entry){
     if (err) {
       res.send(err)
     }
-    res.render('entry/single', { currentUser:req.user, entry: entry, title: 'eJournal', profile: ''})
+    res.render('entry/single', { currentUser:req.user, entry: entry, title: 'Link Connect', profile: ''})
   })
 });
 
 // UPDATE SINGLE ENTRY
-router.post('/update/:id', function(req, res, next){
+router.post('/update/:id', Mid.isLoggedIn, function(req, res, next){
   var id = req.params.id;
   Entry.find({'_id': id},  function(err, ent){
     if (err) {
       res.send(err);
     }
-    res.render('update', {user: req.user, title: 'Express-Trifecta', ent: ent });
+    res.render('update', {user: req.user, title: 'Link Connect', ent: ent });
   })
 });
 
 /* SAVE UPDATED ENTRY */
-router.post('/dataUpdate/:id', function(req, res, next){
+router.post('/dataUpdate/:id', Mid.isLoggedIn, function(req, res, next){
   var updatedEntry = {
     subject: req.body.subjectUpdate,
     body: req.body.bodyUpdate
@@ -129,7 +101,7 @@ router.post('/dataUpdate/:id', function(req, res, next){
 });
 
 /* DELETE ENTRY BY ID */
-router.post('/delete/:id', function(req, res, next){
+router.post('/delete/:id', Mid.isLoggedIn, function(req, res, next){
   User.updateOne(req.user, {$pull: {entries: {entryId :req.params.id }}}, function(err, user) {
     if (err) {
       console.log(err);
@@ -144,7 +116,7 @@ router.post('/delete/:id', function(req, res, next){
 });
 
 // Vote Entry Up
-router.post('/:id/vote/up' , isLoggedIn, (req, res, next) => {
+router.post('/:id/vote/up' , Mid.isLoggedIn, (req, res, next) => {
   var voteDn, voteUp;
 
   Entry.findById({'_id': req.params.id}, function(err, singleEntry) {
@@ -181,7 +153,7 @@ router.post('/:id/vote/up' , isLoggedIn, (req, res, next) => {
 });
 
 // Vote Entry Down
-router.post('/:id/vote/down' , isLoggedIn, (req, res, next) => {
+router.post('/:id/vote/down' , Mid.isLoggedIn, (req, res, next) => {
   var voteUp, voteDn;
   Entry.findById({'_id': req.params.id}, function(err, singleEntry){
     for (var i = 0; i < singleEntry.upvotes.length; i++) {
@@ -215,13 +187,6 @@ router.post('/:id/vote/down' , isLoggedIn, (req, res, next) => {
     res.redirect('/entries/all');
   })
 });
-
-function isLoggedIn(req, res, next){
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('login');
-}
 
 
 module.exports = router;
