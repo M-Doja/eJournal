@@ -55,7 +55,17 @@
               <div class="flip-card grid-item">
                 <div class="flip-card-inner">
                   <div class="flip-card-front">
-                    <img src="/img/profile_avatar.png" alt="Avatar" style="margin-top: 10px;width:180px;height:180px;">
+                    <% Users.forEach((user) => { %>
+                      <% if( user.id === doc.authorId) { %>
+                        <% if(user.avatar){ %>
+                          <img id="profilePic" src="<%= user.avatar %>" style="margin-top: 10px;width:180px;height:180px;" alt="">
+                        <%}else{ %>
+                          <img id="profilePic" src="/img/profile_avatar.png" style="margin-top: 10px;width:180px;height:180px;" alt="">
+                        <%}%>
+                      <%}%>
+                    <% }) %>
+
+                    <!-- <img src="/img/profile_avatar.png" alt="Avatar" style="margin-top: 10px;width:180px;height:180px;"> -->
                   </div>
                   <div class="flip-card-back">
                     <h3><a href="/entries/<%= doc.id %>" ><%= doc.subject.toUpperCase() %></a></h3>

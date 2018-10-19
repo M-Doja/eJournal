@@ -33,7 +33,11 @@
   <ul>
     <% users.forEach(function(user){ %>
       <li class="item">
-        <img class="avatar"src="/img/profile_avatar.png" alt="">
+        <% if(user.avatar){ %>
+          <img id="profilePic" src="<%= user.avatar %>" style="margin-top: 10px;width:180px;height:180px;" alt="">
+        <%}else{ %>
+          <img id="profilePic" src="/img/profile_avatar.png" style="margin-top: 10px;width:180px;height:180px;" alt="">
+        <%}%>
         <a href="/<%= user.username %>"><%= user.username%> </a>
       </li>
     <%})%>

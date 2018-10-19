@@ -64,11 +64,13 @@ var mainRoutes = require('./routes/index');
 var entryRoutes = require('./routes/entry');
 var stripeRoutes = require('./routes/stripe');
 var messageRoutes = require('./routes/message');
+var imageRoutes = require('./routes/images');
 
 app.use('/', mainRoutes);
 app.use('/entries', entryRoutes);
 app.use('/stripe', stripeRoutes);
 app.use('/inbox', messageRoutes);
+app.use('/upload', imageRoutes);
 
 
 app.listen(config.Port, () => {

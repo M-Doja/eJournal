@@ -8,7 +8,7 @@ module.exports = {
       if (err) {
         console.log(err);
       }
-      var numUnRead = user.inbox.length - user.seen.length;
+      var numUnRead = req.user.inbox.length - req.user.seen.length;
       var iFollowYou;
       req.user.following.forEach((followedUser) => {
         if (followedUser.id) {
@@ -22,7 +22,7 @@ module.exports = {
       if (req.user.id !== user.id) {
         numUnRead = 0
       }
-      res.render('profile', { unread:numUnRead, isFollowing: iFollowYou,  currentUser : req.user, user : user, entry:[], text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''});
+      res.render('profile', { unread:numUnRead, isFollowing: iFollowYou,  currentUser : req.user, user : user, entry:req.user.entries, text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''});
     });
   },
   AddFollow: function(req, res, next, url, newFollowId){
