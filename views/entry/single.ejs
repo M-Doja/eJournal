@@ -7,13 +7,8 @@
       <p style="font-size: 18px;">Published: <%= entry[0].date.toDateString() %></p>
 
     </div> -->
-    <div class="container text-center">
-      <a id="logoutBtn"  href="/logout"><button class="" type="button">logout</button> </a>
-      <a id="logoutBtn"  href="/home"><button class="" type="button">Home</button> </a>
-      <a id="logoutBtn"  href="/entries/all"><button class="" type="button">Entries</button> </a>
-      <a id="logoutBtn"  href="/<%= currentUser.username %>"><button class="" type="button">Profile</button> </a>
-      <a id="logoutBtn"  href="/inbox/all"><button class="" type="button">Inbox</button> </a>
-    </div><br><br>
+    <% include ../partials/nav %>
+
 
     <div class="text-center container lead">
 
@@ -35,6 +30,10 @@
                       <button class="btn"type="submit" data-toggle="tooltip" title="Are you sure ? This is permanent!">delete</button>
                     </form>
 
+                    <form class="ctrl" action="/entries/update/<%= doc.id %>" method="post">
+                      <button class="btn"type="submit">update</button>
+                    </form>
+
                   <% }else{ %>
 
                     <form class="voteForm up" action="/entries/<%= doc.id %>/vote/up" method="post">
@@ -52,9 +51,7 @@
                     <button type="submit"> <i class="fa fa-thumbs-down"></i> <%= doc.upvotes.length %></button>
                   </form> -->
 
-                  <!-- <form class="ctrl" action="/entry/update/<%= doc.id %>" method="post">
-                    <button class="btn"type="submit">update</button>
-                  </form> -->
+
               </div>
             <% }); %>
 

@@ -53,14 +53,8 @@
               <br>
               Profile: <b><%= user.username %></b> <br>
             </p>
-            <a href="#"class="btn btn-default rounded"><span class="glyphicon glyphicon-cog"></span> Settings</a>
-          <form style="margin:0 auto" action="/upload/new/<%= user.id %>" method="post" enctype="multipart/form-data">
-            <div class="text-center form-group">
-              <input style="margin:10px  auto" type="file" id="image" name="image" accept="image/*" required>
-            </div>
-            <br>
-            <button type="submit" class="btn btn-default rounded"><span class="glyphicon glyphicon-upload"></span> Photo Upload</button>
-          </form>
+            <a href="/<%= user.username %>/settings"class="btn btn-default rounded"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+
         </div>
         <br>
         <% if( entry.length === 1) { %>
@@ -71,8 +65,9 @@
 
   		</div>
   		<div class="col-md-6  text-center">
-        <h3>Follows</h3>
-    
+        <h2>Stats</h2>
+
+
         <div class="row">
           <div class="col-md-12">
             <div class="tabbable" id="tabs-704485">
@@ -83,6 +78,9 @@
                 <li class="nav-item">
                   <a style="color:#000;"class="nav-link " href="#tab2" data-toggle="tab">Following <%= user.following.length %></a>
                 </li>
+                <li class="nav-item">
+                  <a style="color:#000;"class="nav-link " href="#tab3" data-toggle="tab">Posts <%= user.entries.length %></a>
+                </li>
               </ul>
               <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
@@ -92,11 +90,15 @@
                   <% user.followers.forEach(function(person){ %>
                     <a href="/<%= person.name %>">
                       <div class="tile">
-                        <% if(person.pic){ %>
-                          <img id="profilePic" src="<%= person.pic %>"width="75" alt=""><br>
-                        <%}else{ %>
-                          <img id="profilePic" src="/img/profile_avatar.png"width="75" alt=""><br>
-                        <%}%>
+                        <% allUsers.forEach((user) => { %>
+                        <% if ( user.username === person.name) { %>
+                          <% if(user.avatar){ %>
+                            <img id="profilePic" src="<%= user.avatar %>"width="75" alt=""><br>
+                          <% } else { %>
+                            <img id="profilePic" src="/img/profile_avatar.png"width="75" alt=""><br>
+                          <% } %>
+                         <% } %>
+                         <% }) %>
                         <%= person.name%>
                       </div>
                     </a>
@@ -109,15 +111,22 @@
                   <% user.following.forEach(function(person){ %>
                     <a href="/<%= person.name %>">
                       <div class="tile">
-                        <% if(person.pic){ %>
-                          <img id="profilePic" src="<%= person.pic %>" width="75"alt=""><br>
-                        <%}else{ %>
-                          <img id="profilePic" src="/img/profile_avatar.png" width="75"alt=""><br>
-                        <%}%>
+                        <% allUsers.forEach((user) => { %>
+                        <% if ( user.username === person.name) { %>
+                          <% if(user.avatar){ %>
+                            <img id="profilePic" src="<%= user.avatar %>"width="75" alt=""><br>
+                          <% } else { %>
+                            <img id="profilePic" src="/img/profile_avatar.png"width="75" alt=""><br>
+                          <% } %>
+                         <% } %>
+                         <% }) %>
                         <%= person.name%>
                       </div>
                     </a>
                   <%})%>
+                </div>
+                <div class="tab-pane" id="tab3">
+                  Posts
                 </div>
               </div>
             </div>

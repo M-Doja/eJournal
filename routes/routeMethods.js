@@ -24,7 +24,10 @@ module.exports = {
       if (req.user.id !== user.id) {
         numUnRead = 0
       }
-      res.render('profile', { unread:numUnRead, isFollowing: iFollowYou,  currentUser : req.user, user : user, entry:req.user.entries, text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''});
+      User.find({}, function(err, allUsers){
+        res.render('profile', { unread:numUnRead, isFollowing: iFollowYou,  currentUser : req.user, user : user, allUsers: allUsers, entry:req.user.entries, text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''});
+
+      })
     });
   },
   GetFollowers: function(req, res){

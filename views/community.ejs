@@ -1,7 +1,7 @@
 <% include partials/header %>
 <style media="screen">
   nav #Communitybtn {color:#fff;font-weight: bold;}
-
+  ul {padding: 0;text-align: center;}
   /* Community Member Styles  */
   .item {
     display: inline-block;
@@ -10,6 +10,10 @@
     font-size: 18px;
     color:#000;
     text-align: center;
+    margin: auto;
+    max-width: 210px;
+    width: 100%;
+    position: sticky;
   }
   .item a { color: #000; font-weight: bold;}
   .item img {
@@ -21,6 +25,29 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+  .wrapper {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+}
+@media screen and (max-width:1200px) {
+  .wrapper{
+    grid-template-columns: auto auto auto
+  }
+}
+@media screen and (max-width:860px) {
+  .wrapper{
+    grid-template-columns: auto auto
+  }
+}
+@media screen and (max-width:600px) {
+  .wrapper{
+    grid-template-columns: auto;
+  }
+}
+.item {
+  margin: 25px auto;
+}
 </style>
 <% include partials/nav %>
 
@@ -29,21 +56,33 @@
 
 <p><%= users.length%> memebers in our community</p>
 
-<div class="container">
-  <ul>
-    <% users.forEach(function(user){ %>
-      <li class="item">
-        <a href="/<%= user.username %>">
-        <% if(user.avatar){ %>
-          <img id="profilePic" src="<%= user.avatar %>" style="margin-top: 10px;width:180px;height:180px;" alt="">
-        <%}else{ %>
-          <img id="profilePic" src="/img/profile_avatar.png" style="margin-top: 10px;width:180px;height:180px;" alt="">
-        <%}%>
-        <h3><%= user.username%></h3>
-         </a>
-      </li>
-    <%})%>
-  </ul>
+<div class="container text-center">
+
+  <form action="/community/member" method="Post" class="form-inline text-center" id="movie-search">
+    <div class="memberSrch" style="">
+      <input style="width:100%;text-align:center;"type="text" id="schFld" name="search" required placeholder="Search community by member name.." class="form-control">
+      <input style="font-weight:bold;"class="btn btn-default btn-block" id="srcBtn"  type="submit" value="Search" >
+    </div>
+  </form><br>
+  <a style="color:#000;" href="/community/all">Clear Search</a><br>
+  <br>
+
+  <div class="row">
+    <ul class="wrapper">
+      <% users.forEach(function(user){ %>
+        <li class="item">
+          <a href="/<%= user.username %>">
+          <% if(user.avatar){ %>
+            <img id="profilePic" src="<%= user.avatar %>" style="margin-top: 10px;width:180px;height:180px;" alt="">
+          <%}else{ %>
+            <img id="profilePic" src="/img/profile_avatar.png" style="margin-top: 10px;width:180px;height:180px;" alt="">
+          <%}%>
+          <h3><%= user.username%></h3>
+           </a>
+        </li>
+      <%})%>
+    </ul>
+  </div>
 
 </div>
 

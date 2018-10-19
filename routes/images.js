@@ -42,7 +42,7 @@ router.post('/new/:id', Mid.isLoggedIn, upload.single('image'),(req, res, next) 
         if (err) {
           res.send(err)
         }
-        res.redirect(`/${user.username}`)
+        res.redirect(`/${user.username}/settings`)
       })
     })
   });

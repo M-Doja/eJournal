@@ -70,7 +70,7 @@ router.get('/:id', Mid.isLoggedIn, function(req, res, next){
     if (err) {
       res.send(err)
     }
-    res.render('entry/single', { currentUser:req.user, entry: entry, title: 'Link Connect', profile: ''})
+    res.render('entry/single', { user: req.user,currentUser:req.user, entry: entry, title: 'Link Connect', profile: ''})
   })
 });
 
@@ -81,7 +81,7 @@ router.post('/update/:id', Mid.isLoggedIn, function(req, res, next){
     if (err) {
       res.send(err);
     }
-    res.render('update', {user: req.user, title: 'Link Connect', ent: ent });
+    res.render('entry/update', {user: req.user, title: 'Link Connect', ent: ent });
   })
 });
 
@@ -95,7 +95,7 @@ router.post('/dataUpdate/:id', Mid.isLoggedIn, function(req, res, next){
   .then(function(entry){
     Entry.findOne({'_id': req.params.id})
     .then(function(newEntry){
-      res.redirect('/home')
+      res.redirect(`/entries/${newEntry.id}`)
     })
   });
 });
