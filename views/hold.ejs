@@ -1,0 +1,77 @@
+<% include partials/header %>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6 text-center">
+      <!-- Unread Msg -->
+      <% if( currentUser.id === user.id) { %>
+        <% if(unread === 1) { %>
+          <i><%= unread  %> New Message</i>
+        <%}else{ %>
+          <i><%= unread  %> New Messages</i>
+        <%}%>
+      <% } %>
+      <br><br>
+      <!-- Profile Pic -->
+      <div class="picWrap">
+        <img id="" width="150" src="/img/profile_avatar.png" alt="">
+      </div>
+      <!-- Own Profile -->
+      <% if( currentUser.id === user.id) { %>
+        <br><br>
+        <form class="" action="/upload/image" method="post"><br>
+          <button type="submit" class="btn btn-default rounded"><span class="glyphicon glyphicon-upload"></span> Photo Upload</button>
+        </form>
+
+        <div class=""><br><br>
+          <button type="button" name="button"><%= user.followers.length %> Followers</button>
+          <button type="button" name="button">Following <%= user.following.length %></button>
+        </div>
+        <br>
+        <p class="">Profile: <%= user.username %></p><br>
+
+        <% if( entry.length === 1) { %>
+          <p><%= entry.length %> doccument</p>
+        <% } else { %>
+          <p><%= entry.length %> documents</p>
+        <% } %>
+
+
+		</div>
+		<div class="col-md-6 text-center">
+      <div class="">
+        <h3>Following</h3>
+        <ul>
+          <li class="iFollow"><%= user.following.length %></li>
+        </ul>
+      </div>
+
+      <% }else { %>
+
+        <% if( isFollowing ) { %>
+          <form class="" action="/remove/follower/<%= user.id %>" method="post">
+            <br>
+            <button type="submit" >Un-Follow <%= user.username %></button>
+          </form><br>
+        <% } else { %>
+          <form class="" action="/add/follow/<%= user.id %>" method="post">
+            <br>
+            <button type="submit" >Follow <%= user.username %></button>
+          </form><br>
+        <% } %>
+        <h4>Send Message</h4>
+        <form action="/inbox/<%= user.username %>/new/message" method="post">
+          <input id="m" autofocus name="mailSubject"autocomplete="off" /><br>
+          <textarea name="mailBody" rows="8" autocomplete="off" cols="80"></textarea><br>
+          <button type="submit">Send</button>
+        </form>
+    </div>
+
+      <% } %>
+
+		</div>
+	</div>
+
+
+
+<% include partials/footer %>
