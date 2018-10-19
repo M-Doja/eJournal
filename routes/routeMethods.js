@@ -1,6 +1,8 @@
 const Entry = require('../models/Entry');
 const Message = require('../models/Message');
 const User = require('../models/User');
+var usersArr = [];
+var followingArr = [];
 
 module.exports = {
   GetProfile: function(req, res, reqParams){
@@ -25,49 +27,22 @@ module.exports = {
       res.render('profile', { unread:numUnRead, isFollowing: iFollowYou,  currentUser : req.user, user : user, entry:req.user.entries, text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''});
     });
   },
-  AddFollow: function(req, res, next, url, newFollowId){
-    User.findById({'_id': req.user.id}, function(err, follower){
-      if (err) {
-        console.log(err);
+  GetFollowers: function(req, res){
+
+    User.findById({'_id': req.user.id}, function(err, user){
+      // user.following.forEach(function(userID){
+      //   User.findById({'_id': userID}, function(err, followedUser){
+      //     res.send(followedUser);
+      //   })
+      for (var i = 0; i < user.following.length; i++) {
+        var folowUser = {
+          userID: user.following[i].id
+        }
+        usersArr.push(folowUser);
+        // return usersArr;
       }
-      var alreadyFollowing;
-      follower.following.forEach((followedUser) => {
-        if (newFollowId === followedUser.id) {
-          alreadyFollowing = true;
-          return alreadyFollowing
-        }
-      });
-      if (!alreadyFollowing) {
-        follower.following.push({
-          id: newFollowId
-        });
-      }
-      follower.save(function(err){
-        if (err) {
-          console.log(err);
-        }
-      });
-    });
-    User.findById({'_id': newFollowId}, function(err, followed){
-      var alreadyAFollower;
-      url = followed.username;
-      followed.followers.forEach((followingUser) => {
-        if (req.user.id === followingUser.id) {
-          alreadyAFollower = true;
-          return alreadyAFollower
-        }
-      });
-      if (!alreadyAFollower) {
-        followed.followers.push({
-          id: req.user.id
-        });
-      }
-      followed.save(function(err){
-        if (err) {
-          console.log(err);
-        }
-      });
-     res.render('profile', { isFollowing: 'iFollowYou', currentUser : req.user, user : followed, entry:[], text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''})
-    });
+
+      // })
+    })
   }
 }

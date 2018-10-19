@@ -2,7 +2,7 @@
 <style media="screen">
   #followList li {list-style: none;}
   nav #Profilebtn {color:#fff;font-weight: bold;}
-
+  .tile {display: inline-block; margin: 5px}
 </style>
 <nav class="navbar navbar-inverse">
 
@@ -20,6 +20,7 @@
       <li class=""><a id="Homebtn"href="/home">Home</a></li>
       <li  class=""><a id="Profilebtn" href="/<%= currentUser.username %>">Profile </a></li>
       <li><a id="Communitybtn" href="/community/all">Community</a></li>
+      <li><a id="Postbtn" href="/entries/all">Posts</a></li>
       <li><a id="Inboxbtn" href="/inbox/all">Inbox
 
       </a></li>
@@ -47,6 +48,12 @@
             <%}else{ %>
               <img id="profilePic" src="/img/profile_avatar.png"width="150" alt="">
             <%}%>
+
+            <p class="profileName">
+              <br>
+              Profile: <b><%= user.username %></b> <br>
+            </p>
+            <a href="#"class="btn btn-default rounded"><span class="glyphicon glyphicon-cog"></span> Settings</a>
           <form style="margin:0 auto" action="/upload/new/<%= user.id %>" method="post" enctype="multipart/form-data">
             <div class="text-center form-group">
               <input style="margin:10px  auto" type="file" id="image" name="image" accept="image/*" required>
@@ -55,25 +62,67 @@
             <button type="submit" class="btn btn-default rounded"><span class="glyphicon glyphicon-upload"></span> Photo Upload</button>
           </form>
         </div>
-        <div class="btnWrap"><br>
-          <button type="button" name="button"><%= user.followers.length %> Followers</button>
-          <button type="button" name="button">Following <%= user.following.length %></button>
-        </div><br>
-        <p class="profileName">
-          Profile: <%= user.username %> <br>
-        </p>
+        <br>
         <% if( entry.length === 1) { %>
-          <p><%= entry.length %> doccument</p>
+          <p><%= entry.length %> doccument created</p>
         <% } else { %>
-          <p><%= entry.length %> documents</p>
+          <p><%= entry.length %> documents created</p>
         <% } %>
 
   		</div>
   		<div class="col-md-6  text-center">
-        <h3>Following</h3>
-        <ul id="followList">
-          <li class="iFollow"><%= user.following.length %></li>
-        </ul>
+        <h3>Follows</h3>
+    
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tabbable" id="tabs-704485">
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a style="color:#000;"class="nav-link" href="#tab1" data-toggle="tab"><%= user.followers.length %> Followers</a>
+                </li>
+                <li class="nav-item">
+                  <a style="color:#000;"class="nav-link " href="#tab2" data-toggle="tab">Following <%= user.following.length %></a>
+                </li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane active" id="tab1">
+                  <p>
+                    Followers
+                  </p>
+                  <% user.followers.forEach(function(person){ %>
+                    <a href="/<%= person.name %>">
+                      <div class="tile">
+                        <% if(person.pic){ %>
+                          <img id="profilePic" src="<%= person.pic %>"width="75" alt=""><br>
+                        <%}else{ %>
+                          <img id="profilePic" src="/img/profile_avatar.png"width="75" alt=""><br>
+                        <%}%>
+                        <%= person.name%>
+                      </div>
+                    </a>
+                  <%})%>
+                </div>
+                <div class="tab-pane" id="tab2">
+                  <p>
+                    Following
+                  </p>
+                  <% user.following.forEach(function(person){ %>
+                    <a href="/<%= person.name %>">
+                      <div class="tile">
+                        <% if(person.pic){ %>
+                          <img id="profilePic" src="<%= person.pic %>" width="75"alt=""><br>
+                        <%}else{ %>
+                          <img id="profilePic" src="/img/profile_avatar.png" width="75"alt=""><br>
+                        <%}%>
+                        <%= person.name%>
+                      </div>
+                    </a>
+                  <%})%>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
   		</div>
   	</div>
   </div>
@@ -82,7 +131,13 @@
   <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-6  text-center">
-			<img alt="Bootstrap Image Preview" src="/img/profile_avatar.png" width="150" id="proPic" />
+
+          <% if(user.avatar){ %>
+            <img id="profilePic" src="<%= user.avatar %>" style="margin-top: 10px;width:180px;height:180px;" alt="">
+          <%}else{ %>
+            <img id="profilePic" src="/img/profile_avatar.png" style="margin-top: 10px;width:180px;height:180px;" alt="">
+          <%}%>
+
 
       <% if( isFollowing ) { %>
         <form class="" action="/remove/follower/<%= user.id %>" method="post">

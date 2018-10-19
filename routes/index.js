@@ -25,6 +25,9 @@ router.get('/register', (req, res) => {
   res.render('register');
 });
 
+router.get('/getFollowing', (req, res, next) => {
+  RM.GetFollowers(req, res);
+});
 /* Render Credit Purchase Page */
 router.get('/no_credit', Mid.isLoggedIn, (req, res, next) => {
   res.render('nocredit', {title: 'Link Connect'})
@@ -109,29 +112,59 @@ router.get('/community/all', (req, res, next) => {
 // Add User to Follow
 router.post('/add/follow/:id', Mid.isLoggedIn, (req, res, next) => {
   const newFollowId = req.params.id;
-  var url;
-  User.findById({'_id': req.user.id}, function(err, follower){
-    if (err) {
-      console.log(err);
-    }
-    var alreadyFollowing;
-    follower.following.forEach((followedUser) => {
-      if (newFollowId === followedUser.id) {
-        alreadyFollowing = true;
-        return alreadyFollowing
-      }
-    });
-    if (!alreadyFollowing) {
-      follower.following.push({
-        id: newFollowId
-      });
-    }
-    follower.save(function(err){
+  User.findById({'_id': req.params.id}, function(err, userFollowed){
+    console.log('just followed', userFollowed);
+    User.findById({'_id': req.user.id}, function(err, follower){
       if (err) {
         console.log(err);
       }
+      var alreadyFollowing;
+
+      follower.following.forEach((followedUser) => {
+        if (newFollowId === followedUser.id) {
+          alreadyFollowing = true;
+          return alreadyFollowing
+        }
+      });
+      if (!alreadyFollowing) {
+        follower.following.push({
+          id: newFollowId,
+          name: userFollowed.username,
+          pic: userFollowed.avatar
+        });
+      }
+      follower.save(function(err){
+        if (err) {
+          console.log(err);
+        }
+      });
     });
-  });
+
+  })
+  // var url;
+  // User.findById({'_id': req.user.id}, function(err, follower){
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   var alreadyFollowing;
+  //
+  //   follower.following.forEach((followedUser) => {
+  //     if (newFollowId === followedUser.id) {
+  //       alreadyFollowing = true;
+  //       return alreadyFollowing
+  //     }
+  //   });
+  //   if (!alreadyFollowing) {
+  //     follower.following.push({
+  //       id: newFollowId
+  //     });
+  //   }
+  //   follower.save(function(err){
+  //     if (err) {
+  //       console.log(err);
+  //     }
+  //   });
+  // });
   User.findById({'_id': newFollowId}, function(err, followed){
     var alreadyAFollower;
     url = followed.username;
@@ -143,7 +176,9 @@ router.post('/add/follow/:id', Mid.isLoggedIn, (req, res, next) => {
     });
     if (!alreadyAFollower) {
       followed.followers.push({
-        id: req.user.id
+        id: req.user.id,
+        name: req.user.username,
+        pic: req.user.avatar
       });
     }
     followed.save(function(err){
