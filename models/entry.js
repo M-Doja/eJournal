@@ -22,7 +22,8 @@ var entrySchema = new mongoose.Schema({
           default: Date.now()
         }
       }],
-      authorId: {}
+      authorId: {},
+      author: String
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });

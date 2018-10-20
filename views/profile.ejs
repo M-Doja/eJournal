@@ -125,8 +125,12 @@
                     </a>
                   <%})%>
                 </div>
-                <div class="tab-pane" id="tab3">
-                  Posts
+                <div class="tab-pane" id="tab3"><br>
+                  <% entries.forEach(function(ent) { %>
+                    <% if(ent.author === user.username) { %>
+                      <p><a style="color:#000;Font-weight:bold;" href="/entries/<%= ent._id %>"><%= ent.subject %></a> </p>
+                    <% } %>
+                  <% }) %>
                 </div>
               </div>
             </div>

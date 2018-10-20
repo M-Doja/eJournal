@@ -99,112 +99,30 @@ router.get('/:username', Mid.isLoggedIn, (req, res) => {
   RM.GetProfile(req, res, reqParams);
 });
 
+/* GET Community Member Filter Search */
 router.post('/community/member', Mid.isLoggedIn,(req, res, next) => {
-  User.find({'username': req.body.search.toLowerCase()}, function(err, user){
-    if (err) {
-      return res.redirect('/community/all');
-    }
-    const member = user;
-    console.log(member);
-    if (member) {
-      var numUnRead = req.user.inbox.length - req.user.seen.length;
-      return res.render('community', {unread:numUnRead, title: 'Link Connect', users: member,user : req.user,  entry:[], text: "Welcome back to your page", msg: [], docs: '', profile: ''})
-    }
-  })
+  RM.GetComMember(req, res, req.body.search);
 })
 
+/* GET Community Members Page */
 router.get('/community/all', Mid.isLoggedIn, (req, res, next) => {
-  User.find({}, function(err, users){
-    if (err) {
-      console.log(err);
-    }else {
-      var numUnRead = req.user.inbox.length - req.user.seen.length;
-      res.render('community', {unread:numUnRead, title: '', users: users,user : req.user,  entry:[], text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''})
-    }
-  })
+  RM.GetWholeCommunity(req, res);
+});
+
+/* GET User Profile Settings Page */
+router.get('/:username/settings', Mid.isLoggedIn, (req, res, next) => {
+  res.render('settings', {title:'Link Connect',user:req.user});
 });
 
 // Add User to Follow
 router.post('/add/follow/:id', Mid.isLoggedIn, (req, res, next) => {
   const newFollowId = req.params.id;
-  User.findById({'_id': req.params.id}, function(err, userFollowed){
-    console.log('just followed', userFollowed);
-    User.findById({'_id': req.user.id}, function(err, follower){
-      if (err) {
-        console.log(err);
-      }
-      var alreadyFollowing;
-
-      follower.following.forEach((followedUser) => {
-        if (newFollowId === followedUser.id) {
-          alreadyFollowing = true;
-          return alreadyFollowing
-        }
-      });
-      if (!alreadyFollowing) {
-        follower.following.push({
-          id: newFollowId,
-          name: userFollowed.username,
-          pic: userFollowed.avatar
-        });
-      }
-      follower.save(function(err){
-        if (err) {
-          console.log(err);
-        }
-      });
-    });
-
-  })
-
-  User.findById({'_id': newFollowId}, function(err, followed){
-    var alreadyAFollower;
-    url = followed.username;
-    followed.followers.forEach((followingUser) => {
-      if (req.user.id === followingUser.id) {
-        alreadyAFollower = true;
-        return alreadyAFollower
-      }
-    });
-    if (!alreadyAFollower) {
-      followed.followers.push({
-        id: req.user.id,
-        name: req.user.username,
-        pic: req.user.avatar
-      });
-    }
-    followed.save(function(err){
-      if (err) {
-        console.log(err);
-      }
-    });
-   res.render('profile', { isFollowing: 'iFollowYou', currentUser : req.user, user : followed, entry:[], text: "Welcome back to your page",title: 'Link Connect', msg: [], docs: '', profile: ''})
-  });
+  RM.AddUserToFollow(req, res, next, newFollowId, req.user.id);
 });
 
 // Remove Followed User
 router.post('/remove/follower/:id', Mid.isLoggedIn, (req, res, next) => {
-  User.updateOne(req.user, {$pull: {following: {id :req.params.id }}}, function(err) {
-    if (err) {
-      res.send(err);
-    }
-  });
-  User.findById({'_id': req.params.id}, function(err, user) {
-    if (err) {
-      res.send(err);
-    }
-    User.updateOne(user, {$pull: {followers: {id :req.user.id }}}, function(err) {
-      if (err) {
-        res.send(err);
-      }
-    });
-    res.redirect(`/${user.username}`)
-
-  })
-});
-
-router.get('/:username/settings', Mid.isLoggedIn, (req, res, next) => {
-  res.render('settings', {title:'Link Connect',user:req.user});
+  RM.RemoveFollowedUser(req, res, next, req.user, req.params.id, req.user.id);
 });
 
 module.exports = router;

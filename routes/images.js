@@ -4,7 +4,6 @@ const router = express.Router();
 const User = require('../models/User');
 const Entry = require('../models/Entry');
 const Mid = require('../middleware');
-const RM = require('./routeMethods');
 const cloudinary = require('cloudinary');
 const multer= require('multer');
 const storage = multer.diskStorage({
@@ -29,20 +28,19 @@ cloudinary.config({
     api_secret: config.Cloud_Api_Secret
 });
 
-router.post('/new/:id', Mid.isLoggedIn, upload.single('image'),(req, res, next) => {
+router.post('/avatar/new/:id', Mid.isLoggedIn, upload.single('image'),(req, res, next) => {
   cloudinary.uploader.upload(req.file.path, function(result) {
     req.body.image = result.secure_url;
     User.findById({'_id': req.params.id}, function(err, user){
       if (err) {
         res.send(err);
       }
-      const name = user.username;
       user.avatar = req.body.image;
       user.save(function(err, user){
         if (err) {
           res.send(err)
         }
-        res.redirect(`/${user.username}/settings`)
+        res.redirect(`/${user.username}/settings`);
       })
     })
   });

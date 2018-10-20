@@ -8,14 +8,12 @@ const Mid = require('../middleware');
 
 // RENDER POST ADDITION PAGE
 router.get('/add', Mid.isLoggedIn, function(req, res, next) {
-  res.render('entry/newEntry', {user: req.user,text: "",title: 'Link Connect', docs: '', profile: ''});
+  res.render('entry/newEntry', {user: req.user,title: 'Link Connect'});
 });
 
 /* GET Entry Page */
 router.get('/all', Mid.isLoggedIn, (req, res) => {
   User.findById({'_id': req.user.id}, function(err, user){
-    // var x = Entry.find().sort({time: -1});
-    // console.log("X is", x.entries);
     Entry.find({}, function(err, entries){
       if (err) {
         res.send(err);
@@ -32,7 +30,8 @@ router.post('/new', Mid.isLoggedIn, function(req, res, next){
     body: req.body.body,
     date: new Date().toLocaleDateString(),
     time: new Date().getTime(),
-    authorId: req.user.id
+    authorId: req.user.id,
+    author: req.user.username
   });
   User.findById({'_id': req.user.id}, function(err, user){
     if (err) {
@@ -67,12 +66,11 @@ router.post('/new', Mid.isLoggedIn, function(req, res, next){
 
 // GET SINGLE ENTRY
 router.get('/:id', Mid.isLoggedIn, function(req, res, next){
-  var id = req.params.id;
-  Entry.find({'_id': id}, function(err, entry){
+  Entry.find({'_id': req.params.id}, function(err, entry){
     if (err) {
       res.send(err)
     }
-    res.render('entry/single', { user: req.user,currentUser:req.user, entry: entry, title: 'Link Connect', profile: ''})
+    res.render('entry/single', { user: req.user, currentUser:req.user, entry:entry, title: 'Link Connect'})
   })
 });
 

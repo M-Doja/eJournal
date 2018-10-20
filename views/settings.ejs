@@ -49,7 +49,7 @@ delete user account
                   <img style="padding:15px;" id="profilePic" src="/img/profile_avatar.png" alt="">
                 <% } %>
               </div>
-              <form style="margin:0 auto" action="/upload/new/<%= user.id %>" method="post" enctype="multipart/form-data">
+              <form style="margin:0 auto" action="/upload/avatar/new/<%= user.id %>" method="post" enctype="multipart/form-data">
                 <div class="text-center form-group">
                   <input style="margin:10px  auto" type="file" id="image" name="image" accept="image/*" required>
                 </div>
