@@ -16,7 +16,7 @@
     <div class="replyFormWrap text-center">
       <form class="replyForm" action="/inbox/<%= mail._id %>/reply" method="post">
         <input style="border-radius:8px;text-align:center;" type="text" name="mailReplySubject" placeholder="Subject.."><br><br>
-        <textarea id="replyBody" name="mailReply" placeholder="Text here..."></textarea><br>
+        <textarea id="replyBody" name="mailReply" required placeholder="Text here..."></textarea><br>
 
         <button id="replyBtn"type="submit">Reply</button>
       </form>

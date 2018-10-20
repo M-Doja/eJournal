@@ -36,16 +36,10 @@ router.get('/logout', (req, res) => {
 });
 
 /* POST Sign In */
-// router.post('/login', passport.authenticate('local', {
-//   successRedirect: '/home',
-//   failureRedirect: '/login'
-// }), (req, res) => {});
 router.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
-    if (err) {
-      return next(err); // will generate a 500 error
-    }
-    // Generate a JSON response reflecting authentication status
+  passport.authenticate('local', function(err, user) {
+    if (err) return next(err);
+
     if (! user) {
        res.render('login',{ success : false, msg : 'Invalid username or password!' });
     }
@@ -58,23 +52,15 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-
 /* POST Register New User */
-router.post('/register', [
-    body('username')
-      .isLength({ min: 1 })
-      .withMessage('Please enter a name'),
-    body('password')
-      .isLength({ min: 1 })
-      .withMessage('Please enter an password'),
-  ], (req, res) => {
+router.post('/register', (req, res) => {
   User.register(new User({
     username: req.body.username,
     balance: 30
   }),req.body.password, (err, user) => {
     if (err) {
       console.log(err);
-      res.render('register',{msg: err.message});
+      return res.render('register',{msg: err.message});
     }
     passport.authenticate('local')(req, res, function(){
       res.redirect('/home');
