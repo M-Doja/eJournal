@@ -7,15 +7,19 @@
     </div>
     <a href="/home">Back Home</a><br><br>
 
-
+    <form class="" action="/paynow" method="post">
+      <input type="text" name="amount" placeholder="enter amount to charge" value="">
+      <button type="submit" >Pay</button>
+    </form>
     <div id="accordion" class="text-center"role="tablist">
         <div class="card">
             <div class="card-header" role="tab" id="heading1">
               <h2>Buy Now</h2>
             </div>
             <div>
-                <div class="card-body">
+                <!-- <div class="card-body">
                     <form action="/stripe/charge/thirty" method="POST">
+                      <input type="text" name="amount" value="">
                         <script class="stripe-button"
                         src="https://checkout.stripe.com/checkout.js"
                         data-email="trifectaejournal@gmail.com"
@@ -26,7 +30,7 @@
                         data-label="Purchase 1 month (30 Posts)"
                         data-locale="en-US"></script>
                     </form>
-                </div>
+                </div> -->
             </div>
         </div>
 

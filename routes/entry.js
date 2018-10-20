@@ -188,5 +188,33 @@ router.post('/:id/vote/down' , Mid.isLoggedIn, (req, res, next) => {
   })
 });
 
+router.post('/add/subscription/:id', (req, res, next) => {
+  Entry.findById({'_id': req.params.id}, function(err, ent){
+    if (err) return res.send(err);
+    const newSubscription = {
+      authorName: ent.author,
+      authorId: ent.authorId,
+      authorPosts: [{
+        entryId: ent._id,
+        entrySubject: ent.subject
+      }]
+    }
+    // User.findById({'_id': req.user.id}, function(err, user){
+    //   if (err) return res.send(err);
+    //   user.subscriptions.push(newSubscription);
+    //   user.save(function(err) {
+    //     console.log(err)
+    //   });
+    // });
+    console.log("ent", ent);
+    User.findOne({'id': ent.authorId},function(err, author){
+      res.send(author);
+    })
+  });
+});
+
+router.post('/remove/subscription/:id', (req, res, next) => {
+
+});
 
 module.exports = router;

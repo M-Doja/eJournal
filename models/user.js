@@ -17,7 +17,6 @@ var userSchema = new mongoose.Schema({
   subscriptions : [{
     authorName: String,
     authorId: String,
-    authorPic: String,
     authorPosts: [{
       entryId: String,
       entrySubject: String

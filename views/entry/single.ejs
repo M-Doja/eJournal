@@ -1,12 +1,5 @@
 <% include ../partials/header %>
 
-
-
-    <!-- <div class="text-center container jumbotron">
-      <h2><%= entry[0].subject %> </h2>
-      <p style="font-size: 18px;">Published: <%= entry[0].date.toDateString() %></p>
-
-    </div> -->
     <% include ../partials/nav %>
 
 
@@ -17,6 +10,25 @@
           <div class="" id="">
           <% if(entry.length > 0){ %>
             <div style="color:#000;" class="text-center  jumbotron">
+              <% if(currentUser.subscriptions.length === 0 ){ %>
+                <form style="text-align:right;" class="subscriptionBtn" action="/entries/add/subscription/<%= entry[0].id %>" method="post">
+                  <button type="submit" class="btn btn-default" >Subscribe</button>
+                </form>
+              <%} else { %>
+                <% currentUser.subscriptions.forEach(function(sub){ %>
+                  <!-- <%= sub %> -->
+                  <!-- <b><%=entry[0].author%></b> -->
+                  <!-- <b><%=sub.authorName%></b> -->
+                  <% if(!sub.authorName == entry[0].author) { %>
+                    <form style="text-align:right;" class="subscriptionBtn" action="/entries/remove/subscription/<%= entry[0].id %>" method="post">
+                      <button type="submit" class="btn btn-default" >Un-Subscribe</button>
+                    </form>
+                    <% } %>
+
+                <%})%>
+              <%}%>
+
+
               <h2><b><%= entry[0].subject %></b> </h2>
               <i>By: <a href="/<%= entry[0].author %>"><%= entry[0].author %></a> </i>
 
