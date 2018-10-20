@@ -7,6 +7,9 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
+  "engines": {
+    "node": "6.10.3"
+  },
   "keywords": [],
   "author": "Micah Dunson",
   "license": "ISC",
