@@ -17,12 +17,12 @@ router.get('/', (req, res) => {
 
 /* Render Login Form */
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login',{text: "", title:"Link Connect", unread: '', user:req.user });
 });
 
 /* Render Register Form */
 router.get('/register', (req, res) => {
-  res.render('register');
+  res.render('register',{text: "", title:"Link Connect", unread: '', user:req.user });
 });
 
 router.get('/getFollowing', (req, res, next) => {

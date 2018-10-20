@@ -14,12 +14,14 @@ router.get('/add', Mid.isLoggedIn, function(req, res, next) {
 /* GET Entry Page */
 router.get('/all', Mid.isLoggedIn, (req, res) => {
   User.findById({'_id': req.user.id}, function(err, user){
+    // var x = Entry.find().sort({time: -1});
+    // console.log("X is", x.entries);
     Entry.find({}, function(err, entries){
       if (err) {
         res.send(err);
       }
       res.render('entry/allEntries', { user : req.user, entry: entries, text: "",title: 'Link Connect', docs: '', profile: ''});
-    });
+    }).sort({time: -1});
   });
 });
 
