@@ -13,10 +13,15 @@ var entrySchema = new mongoose.Schema({
       downvotes: [{
         voterId: String
       }],
-      comments: {
+      comments: [{
         body: String,
-        commenterId: String
-      },
+        commenterName: String,
+        commenterId: String,
+        createdAt: {
+          type: Date,
+          default: Date.now()
+        }
+      }],
       authorId: {}
 });
 

@@ -12,9 +12,22 @@ var userSchema = new mongoose.Schema({
   followers: [],
   following: [],
   entries : [],
-  sent: [],
+  inbox: [],
   seen: [],
-  inbox : []
+  subscriptions : [{
+    authorName: String,
+    authorId: String,
+    authorPic: String,
+    authorPosts: [{
+      entryId: String,
+      entrySubject: String
+    }]
+  }],
+  subscribers: [{
+    subscriberName: String,
+    subscriberId: String,
+    subscriberImage: String
+  }]
 });
 
 mongoose.plugin(schema => { schema.options.usePushEach = true });

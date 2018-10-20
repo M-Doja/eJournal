@@ -1,33 +1,29 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 const passport = require('passport');
+const Mid = require('../middleware');
+const User = require('../models/User');
 const Entry = require('../models/Entry');
 const Message = require('../models/Message');
 const { body, validationResult } = require('express-validator/check');
-const User = require('../models/User');
-const moment = require('moment');
-const Mid = require('../middleware');
 const RM = require('./routeMethods');
 
-
-/* Render Login / Registration Page */
+/* Render landing Page */
 router.get('/', (req, res) => {
   res.render('index', {text: "", title:"Link Connect", unread: '', user:req.user });
 });
 
 /* Render Login Form */
 router.get('/login', (req, res) => {
-  res.render('login',{text: "", title:"Link Connect", unread: '', user:req.user });
+  res.render('login',{text: "", msg: '', title:"Link Connect", unread: '', user:req.user });
 });
 
 /* Render Register Form */
 router.get('/register', (req, res) => {
-  res.render('register',{text: "", title:"Link Connect", unread: '', user:req.user });
+  res.render('register',{text: "", msg: '', title:"Link Connect", unread: '', user:req.user });
 });
 
-router.get('/getFollowing', (req, res, next) => {
-  RM.GetFollowers(req, res);
-});
 /* Render Credit Purchase Page */
 router.get('/no_credit', Mid.isLoggedIn, (req, res, next) => {
   res.render('nocredit', {title: 'Link Connect'})
@@ -40,10 +36,28 @@ router.get('/logout', (req, res) => {
 });
 
 /* POST Sign In */
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/home',
-  failureRedirect: '/login'
-}), (req, res) => {});
+// router.post('/login', passport.authenticate('local', {
+//   successRedirect: '/home',
+//   failureRedirect: '/login'
+// }), (req, res) => {});
+router.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      return next(err); // will generate a 500 error
+    }
+    // Generate a JSON response reflecting authentication status
+    if (! user) {
+       res.render('login',{ success : false, msg : 'Invalid username or password!' });
+    }
+    req.login(user, function(err){
+      if(err){
+        return next(err);
+      }
+       res.redirect('/home');
+    });
+  })(req, res, next);
+});
+
 
 /* POST Register New User */
 router.post('/register', [
@@ -60,7 +74,7 @@ router.post('/register', [
   }),req.body.password, (err, user) => {
     if (err) {
       console.log(err);
-      res.render('register');
+      res.render('register',{msg: err.message});
     }
     passport.authenticate('local')(req, res, function(){
       res.redirect('/home');
